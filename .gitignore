@@ -1,0 +1,37 @@
+# secrets
+.env
+.env.*
+!.env.example
+tools/.env
+
+# data & outputs (data/splits nên commit nếu nhỏ: xoá dòng dưới và thêm data/* + !data/splits/)
+data/
+results/
+runs/
+checkpoints/
+wandb/
+final_submissions/
+*.npy
+*.npz
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*.onnx
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+
+# web
+node_modules/
+dist/
+build/
+.next/
+coverage/
+
+# claude local
+.claude/settings.local.json
+.claude/state/

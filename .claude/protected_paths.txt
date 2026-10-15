@@ -7,6 +7,9 @@ data/splits/**
 .env
 tools/.env
 
+# Bản sao starter kit của BTC (upstream, chỉ đọc):
+starter_kit/**
+
 # Bật khi script đánh giá đã chốt (để không "sửa thước đo cho đẹp số"):
 # eval/**
 

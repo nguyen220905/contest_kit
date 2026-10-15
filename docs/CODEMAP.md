@@ -2,13 +2,18 @@
 > Chạy /map để subagent code-mapper cập nhật tự động. Agent nên đọc file này thay vì đọc toàn bộ code.
 
 ## Tổng quan
-(chưa có code)
+Chưa có pipeline của đội. `starter_kit/` = code mẫu của BTC (chỉ đọc).
 
 ## Điểm vào & lệnh
+- `scripts/smoke_test.py` — kiểm môi trường dev (GPU, transformers 5.17.0, load + generate Olmo-3-7B).
 
 ## Module
 | Đường dẫn | Trách nhiệm | Phụ thuộc | Ghi chú |
 |---|---|---|---|
+| `starter_kit/01_zero_shot/main.py` | Baseline BTC không retrieval | transformers | LB 29.05 / 733 s |
+| `starter_kit/02_rag/main.py` | Baseline BTC: Docling + MiniLM CPU + cosine, ctx 10k | docling, sentence-transformers | LB 57.14 / 2080 s |
+| `starter_kit/sample/` | 25 câu mẫu có gold + danh sách site nguồn corpus | — | dev data |
+| `scripts/smoke_test.py` | Smoke test môi trường | transformers, bitsandbytes | `--quant 4bit` mặc định |
 
 ## Luồng dữ liệu
 

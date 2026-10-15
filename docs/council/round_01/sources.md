@@ -1,0 +1,188 @@
+# Nguồn tra cứu — round_01
+
+> Link do model trả về có thể sai hoặc bịa (nhất là link chỉ nằm trong văn bản). Mở bằng WebFetch trước khi dựa vào.
+
+### M1 = minimax — vòng 1 — 0 lượt search
+- IEEE CIS Technical Challenge on Domain-Specific ... — https://www.codabench.org/competitions/17954/
+- Join the Challenge – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/join-the-challenge/
+- 2026 Technical Challenge on Domain-Specific Question ... — https://cis.ieee.org/activities/technical-activities/2026-technical-challenge-on-domain-specific-question-answering-with-llms
+- Official Rules — https://cis.taskforce.ieee.org/gpais/wp-content/uploads/sites/6/2026/09/IEEE-CIS-Technical-Challenge-on-Domain-Specific-Question-Answering-with-LLMs-Contest-Rules.pdf
+- Overview – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/
+- When the Query Writer Has Already Read the Corpus: Measuring Contamination Inflation in Synthetic-Supervision Retrieval — Lacuna — https://lacuna.tiptreesystems.com/hypothesis/when-the-query-writer-has-already-read-the-corpus-measuring-contamination-b253ac50f6387691
+- Investigating Data Contamination in Modern Benchmarks ... — https://aclanthology.org/2024.naacl-long.482.pdf
+- Evaluation data contamination in LLMs: how do we measure it and (when) does it matter? — https://arxiv.org/html/2411.03923v1
+- (không tiêu đề) — https://export.arxiv.org/pdf/2206.14759v2.pdf
+- How Much Can We Forget about Data Contamination? — https://arxiv.org/html/2410.03249v4
+- docs/starter-kit.md — https://github.com/gia-uh/gensie/blob/main/docs/starter-kit.md
+- RohitEdathil/helpster — https://github.com/RohitEdathil/helpster
+- ToolQA, a new dataset to evaluate ... — https://github.com/night-chen/ToolQA
+- OpenROAD-Assistant/EDA-Corpus — https://github.com/OpenROAD-Assistant/EDA-Corpus
+
+### M2 = glm — vòng 1 — 0 lượt search
+- Official Rules — https://cis.taskforce.ieee.org/gpais/wp-content/uploads/sites/6/2026/09/IEEE-CIS-Technical-Challenge-on-Domain-Specific-Question-Answering-with-LLMs-Contest-Rules.pdf
+- IEEE CIS Technical Challenge on Domain-Specific ... — https://www.codabench.org/competitions/17954/
+- 2026 Technical Challenge on Domain-Specific Question ... — https://cis.ieee.org/activities/technical-activities/2026-technical-challenge-on-domain-specific-question-answering-with-llms
+- Evaluation – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/evaluation/
+- Join the Challenge – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/join-the-challenge/
+- allenai/Olmo-3.1-32B-Instruct · Hugging Face — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct
+- README.md · allenai/Olmo-3.1-32B-Instruct at main — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/main/README.md
+- Olmo 3 & Olmo Hybrid - Open Instruct — https://allenai.github.io/open-instruct/olmo3/
+- Readme — https://huggingface.co/allenai/Olmo-3-1125-32B/resolve/6d5b3decc702fc68067b7259b324bcfc74dc1e6f/README.md?download=true
+- allenai/Olmo-3.1-32B-Instruct-SFT · Hugging Face — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-SFT
+- Benchmarking | PyMuPDF — https://pymupdf.io/benchmark
+- docs/performance_benchmarks.md — https://github.com/docling-project/docling-parse/blob/main/docs/performance_benchmarks.md
+- docling-parse/perf at main · docling-project/docling-parse · GitHub — https://github.com/docling-project/docling-parse/tree/main/perf
+- playing-an-away-game-with-the-new-pymupdf-benchmark-page — https://pymupdf.io/blog/playing-an-away-game-with-the-new-pymupdf-benchmark-page
+- PyMuPDF Outperforms Docling in Document Parsing Speed and Quality | AI Briefing — https://aibriefing.imbch.dev/en/article/9789480
+
+### M3 = gemini — vòng 1 — 0 lượt search
+- markovianprotocol.com — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHOrZ1dl272PYCmeW3xTF7mipv8Rx0xlO-oVuY2ZJLqZt80o1jBRetCjov1nxtrlvGpkk4QqbMk-rDuzvmd69AftHDA6z0yMyLAdJqMlf8_w72bc37GtX84IZmJ4fWNTDt8zzNMi2A_Xhq8Ywe8aXBS
+- huggingface.co — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGG4ZwcCWnppzPWuXZ2V8_wcGb3aZwfK9XnjIwNemp06lWTMkzwfmyMA2Ftt5HdQtbZgdjMl9MXXcV8mVpLLoPQhqU2ClhboXPUyUyTkyy06H2oS4niFfoIrHEdVjBRhbxPaMSPDhy61aXksuychdZgpr0=
+- ugr.es — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH3K5868MzOuKbKbR_Pu8Bjzg5I3olX5VmOKnUNJBUaMZjFj15kF6KwecAHiLLl_sRd3xoKp4XAo7NwoslhHpIU40wPLI5WGRFM7HvCQ01S-i6gWT7M80xaop45iDxu38xPERXpC9weHsVJl88zOQcypR4LSW65Z16l88RxNtTIdEXmQwgCgkIfSVIUOxZVtvTa1qDPVQ==
+- codabench.org — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEfnqPh_DVNMzErFNIAgk80dyy-E6M1nNLwBRcIzs_i8YbgxlRCfUxUtHRRnWOMcQqHIuQVTrBzS_ZGnzCrzm8VDiJjn7NzPZZMYoPmtIgRdNx2-9WvWptFaayzGI593ZsbzjxRqsfd1Q==
+- ugr.es — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG-zuaNJ5O6dhwdGoVjEwT3LrgXm2fQF40BHa0y8qrIEqvqhywGqi4I4M5DeBOKLheO41K1428BCl3RNxgeYowyy5Ae3RcMS0DMNBJIlHEqoHtHE5DbiN2uXH0p6G9cS9d41zpU8l2DvteOsP02MP3hOHzEGXuVabDxdn_xOPzLUE81fFvhYIP8jjQln5QRE4Uzf1fbYA==
+- mdpi.com — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFEEDKERLIGHCAPo4bHI4-fvN1R2-GD5G9krYudcA34PDknmKByMOeNXvJk6p8nDUUqnYoiEtsKhWE7apXqSWz8vyhXKd-paMdWtzJ4cI56A6DuP6E41ufYdgVKBkFL
+- huggingface.co — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFQr-cvCyJScwFc8l_TuKPCEnGRqBiQjfWXwQtRKoV0rmqWt3xZNzivVbJEb8UOLNDSEuiKaCyw6bPAbB6Js8iobZ0baa08GL8TdKyl1WCrqQMAcutIzx96skCVfnxXWFgLIAzwtC1Fa8NP2aIbU_Y=
+- codabench.org — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGttmIdsKN-xdICL9iXnQlxzxoi6KCsXu3z9vDiP5n8GmONtY5M-UUXVoReL4_ek-jLaHRIHwbf_djvfhoNlMubWl4nMtBS1bC4jC77qcMFVyiXwHOPauMlLSXHkQyRITFd2hH5t_D2iA==
+- readthedocs.io — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGcdl9QPhTkBJIXTvvbxYL9FG4mdRZXo7tAdly9p-WcjeobbN2z20_SCym-sbErD60YwgnNl88htAiKnnbdCx5laCFXiMGcW85-FIr3cM6KLk0xKydncNGwjPcMbhvKs0_kf1Q_bY4mQAU37H8jWdfIuYsylnuFsTzuNDN8Pn8NO7s=
+- huggingface.co — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEkjc_4JmfQSKhXwPaDjSDHGCA5l8qGr4a7NdIfN1OwU1ze_VXXNQkSkD6E9qD7pZa7l3vpEpRC-wtIoni-hukTN5UYt8Ja1y_SAUml-1GQyqJqz2kwRRMpWcklodiY5n6fiCvQ8NA=
+- github.com — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFEB2gGADiborOUd-cjxXVuIYmiK_i4tlMVdZm870dNChPvYYTD1Rt6K_zzZHYsBhrEeFkWTWo0pf85EPL_ZmbuHQtBa-VmM651N_8J8aQYeorYySAfo1H17TKp4QmPlXtEWvrmHLI=
+- github.com — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFFWZGSZeyoREgwW2ZVnGd143pTQc7HN-hDaGdfxHgzA9_sZviwtg8dDo0maSZ55Wcb8up5tQXPRcJSc61W8kqOI9qGItOcNxo7HwG1Q0jEfZsLMUgtB1yQ1aownjwvDKLHVxLp4w==
+- huggingface.co — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGyc_5-YnR46j30iUUqtGg9Ca0r3LLMmZMVx45bTlaLLyEcAUdNMaVvO2AZ_14-pwF1XEsN6O4Yi93pTMFz-0HJXzvki1My6ShwObIltpBchFij4eAj22QYAj1vvBSUQB_ASAmfKaVeAx79Vt7I1htFjhlJ5TYIY5z1iRlJzQZ0lKQNWgvIFG_O51Of1ujpPLEZ
+- (không tiêu đề) — https://huggingface.co/BAAI/bge-m3/tree/main
+- (không tiêu đề) — https://huggingface.co/BAAI/bge-reranker-v2-m3/tree/main
+- (không tiêu đề) — https://github.com/ari-dasci/S-WinStat
+- (không tiêu đề) — https://www.codabench.org/competitions/17954/
+- (không tiêu đề) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms
+- (không tiêu đề) — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct
+
+### M4 = openai — vòng 1 — 0 lượt search
+- (không tiêu đề) — https://arxiv.org/html/2604.01733v1
+- (không tiêu đề) — https://github.com/anubhavmaity/wattbot
+- (không tiêu đề) — https://www.codabench.org/competitions/17954/
+- (không tiêu đề) — https://github.com/jucls/IEEE-CIS-DSQA-Starter-Kit
+
+### M5 = qwen — vòng 1 — 0 lượt search
+- IEEE CIS Technical Challenge on Domain-Specific ... — https://www.codabench.org/competitions/17954/
+- 2026 Technical Challenge on Domain-Specific Question ... — https://cis.ieee.org/activities/technical-activities/2026-technical-challenge-on-domain-specific-question-answering-with-llms
+- Official Rules — https://cis.taskforce.ieee.org/gpais/wp-content/uploads/sites/6/2026/09/IEEE-CIS-Technical-Challenge-on-Domain-Specific-Question-Answering-with-LLMs-Contest-Rules.pdf
+- Join the Challenge – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/join-the-challenge/
+- UGR and IFMIF-DONES challenge the international scientific community to develop an expert AI that works with limited resources and without sending data off-site - IFMIF-DONES — https://ifmif-dones.es/dones-updates/ugr-and-ifmif-dones-challenge-the-international-scientific-community-to-develop-an-expert-ai-that-works-with-limited-resources-and-without-sending-data-off-site/
+- allenai/Olmo-3.1-32B-Instruct · Hugging Face — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct
+- README.md · allenai/Olmo-3.1-32B-Instruct at main — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/main/README.md
+- README.md · allenai/Olmo-3.1-32B-Instruct at refs/pr/1 — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/refs%2Fpr%2F1/README.md
+- README.md · allenai/Olmo-3.1-32B-Instruct at d72759eb9ecd8b6b89b79b8b6bec7506f8955152 — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/d72759eb9ecd8b6b89b79b8b6bec7506f8955152/README.md
+- README.md · allenai/Olmo-3.1-32B-Instruct at 20d6096aa631a89fb041faae70983cceb709b248 — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/20d6096aa631a89fb041faae70983cceb709b248/README.md
+- [2310.10076] Verbosity Bias in Preference Labeling by Large Language Models — https://ar5iv.labs.arxiv.org/html/2310.10076
+- Explaining Length Bias in LLM-Based Preference Evaluations — https://arxiv.org/html/2407.01085v3
+- Justice or Prejudice? Quantifying Biases in LLM-as-a-Judge — https://arxiv.org/abs/2410.02736
+- Verbosity ≠ Veracity: Demystify Verbosity Compensation Behavior of Large Language Models — https://arxiv.org/html/2411.07858v1
+- Evaluating and Mitigating LLM-as-a-judge Bias in ... — https://arxiv.org/html/2510.12462v3
+
+### M6 = kimi — vòng 1 — 0 lượt search
+- IEEE CIS Technical Challenge on Domain-Specific ... — https://www.codabench.org/competitions/17954/
+- 2026 Technical Challenge on Domain-Specific Question ... — https://cis.ieee.org/activities/technical-activities/2026-technical-challenge-on-domain-specific-question-answering-with-llms
+- Official Rules — https://cis.taskforce.ieee.org/gpais/wp-content/uploads/sites/6/2026/09/IEEE-CIS-Technical-Challenge-on-Domain-Specific-Question-Answering-with-LLMs-Contest-Rules.pdf
+- Join the Challenge – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/join-the-challenge/
+- README.md · allenai/Olmo-3.1-32B-Instruct at main — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/main/README.md
+- UTokyo-HitU at TREC 2025 RAG Track: HyDE-Enhanced Sparse-Dense Retrieval Fusion with LLM Reranking — https://trec.nist.gov/pubs/trec34/papers/UTokyo.rag.pdf
+- NITATREC at TREC RAG 2025: A Report on Exploring Sparse, Dense, and Hybrid Retrieval for Retrieval-Augmented Generation — https://trec.nist.gov/pubs/trec34/papers/NIT%20Agartala.rag.pdf
+- SHRAG: A Framework for Combining Human-Inspired Search with RAG - RDGENAI 2025 1st Place Winner: A New RAG Paradigm Discovered Through Failure — https://sundong.kim/assets/pdf/2025_CIKMW_SHRAG_slides.pdf
+- How We Won the RAG Challenge: Multi‑Router & Dynamic K… | BestHub — https://www.besthub.dev/articles/how-we-won-the-rag-challenge-multi-router-dynamic-knowledge-base-techniques-revealed-b9bb4df2e8d1
+- anubhavmaity/wattbot — https://github.com/anubhavmaity/wattbot
+- Question Decomposition for Retrieval-Augmented ... — https://aclanthology.org/2025.acl-srw.32.pdf
+- Agent-UniRAG: A Trainable Open-Source LLM Agent Framework for Unified Retrieval-Augmented Generation Systems — https://arxiv.org/abs/2505.22571v1
+- Question Decomposition for Retrieval-Augmented Generation — https://arxiv.org/html/2507.00355v1
+- DeepRAG: Thinking to Retrieve Step by Step for Large Language Models — https://arxiv.org/html/2502.01142
+- ReaRAG: Knowledge-guided Reasoning Enhances Factuality of Large Reasoning Models with Iterative Retrieval Augmented Generation — https://arxiv.org/html/2503.21729v1
+
+### M8 = grok — vòng 1 — 0 lượt search
+- https://ieeexplore.ieee.org/document/5597285/authors — https://ieeexplore.ieee.org/document/5597285/authors
+- https://paddlenlp.readthedocs.io/en/latest/_static/website/BAAI/bge-reranker-v2-m3/index.html — https://paddlenlp.readthedocs.io/en/latest/_static/website/BAAI/bge-reranker-v2-m3/index.html
+- https://cis.ieee.org/publications/ieee-computational-intelligence-letters/guidelines-for-paper-submission — https://cis.ieee.org/publications/ieee-computational-intelligence-letters/guidelines-for-paper-submission
+- https://arxiv.org/html/2402.00838v4 — https://arxiv.org/html/2402.00838v4
+- https://allenai.org/papers/olmocore3 — https://allenai.org/papers/olmocore3
+- https://kindatechnical.com/testing-non-deterministic-systems/position-bias-and-verbosity-bias-in-llm-judges.html — https://kindatechnical.com/testing-non-deterministic-systems/position-bias-and-verbosity-bias-in-llm-judges.html
+- https://www.codabench.org/competitions/12873 — https://www.codabench.org/competitions/12873
+- https://github.com/jucls/IEEE-CIS-DSQA-Starter-Kit/blob/main/sample/sample_qa.json — https://github.com/jucls/IEEE-CIS-DSQA-Starter-Kit/blob/main/sample/sample_qa.json
+- https://github.com/clue-ai/clueai-python/blob/main/examples/qa_test.json — https://github.com/clue-ai/clueai-python/blob/main/examples/qa_test.json
+- https://docs.codabench.org/latest/Organizers/Benchmark_Creation/Leaderboard-Functionality/ — https://docs.codabench.org/latest/Organizers/Benchmark_Creation/Leaderboard-Functionality/
+- https://huggingface.co/BAAI/bge-reranker-v2-m3/tree/main — https://huggingface.co/BAAI/bge-reranker-v2-m3/tree/main
+- https://36kr.com/p/3343064830032385 — https://36kr.com/p/3343064830032385
+- https://research.birmingham.ac.uk/en/publications/introduction-to-computational-intelligence-an-ieee-computational-/ — https://research.birmingham.ac.uk/en/publications/introduction-to-computational-intelligence-an-ieee-computational-/
+- https://glama.ai/mcp/servers/harshitAgr/codabench-mcp/tools/search_competitions — https://glama.ai/mcp/servers/harshitAgr/codabench-mcp/tools/search_competitions
+- https://iopscience.iop.org/article/10.1088/1741-4326/ae0657 — https://iopscience.iop.org/article/10.1088/1741-4326/ae0657
+- https://docs.codabench.org/latest/Organizers/Benchmark_Creation/Competition-Creation-Form/ — https://docs.codabench.org/latest/Organizers/Benchmark_Creation/Competition-Creation-Form/
+- https://www.codabench.org/competitions/13636/ — https://www.codabench.org/competitions/13636/
+- https://arxiv.org/pdf/2509.10436 — https://arxiv.org/pdf/2509.10436
+- https://www.researchgate.net/publication/389721709_IFMIF-DONES'_Buildings_and_Plant_Services — https://www.researchgate.net/publication/389721709_IFMIF-DONES'_Buildings_and_Plant_Services
+- https://arxiv.org/html/2511.09971v1 — https://arxiv.org/html/2511.09971v1
+- https://ieeexplore.ieee.org/ielx8/6287639/10820123/11289520.pdf?tp=&arnumber=11289520&isnumber=10820123&ref=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8= — https://ieeexplore.ieee.org/ielx8/6287639/10820123/11289520.pdf?tp=&arnumber=11289520&isnumber=10820123&ref=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8=
+- https://arxiv.org/html/2511.21140 — https://arxiv.org/html/2511.21140
+- https://arxiv.org/abs/2610.18760 — https://arxiv.org/abs/2610.18760
+- https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/evaluation/ — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/evaluation/
+- https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/sample/sample_qa.json — https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/sample/sample_qa.json
+- https://arxiv.org/html/2601.13240v2 — https://arxiv.org/html/2601.13240v2
+- https://coda-bench.github.io/ — https://coda-bench.github.io/
+- https://ieee-dataport.org/competitions/ieee-cis-technical-challenge-predictoptimize-renewable-energy-scheduling — https://ieee-dataport.org/competitions/ieee-cis-technical-challenge-predictoptimize-renewable-energy-scheduling
+- https://github.com/JSON-Agents/Standard/blob/main/schema/capabilities/qa.json — https://github.com/JSON-Agents/Standard/blob/main/schema/capabilities/qa.json
+- https://www.codabench.org/competitions/5372/ — https://www.codabench.org/competitions/5372/
+- https://link.springer.com/article/10.1007/s10894-022-00337-5 — https://link.springer.com/article/10.1007/s10894-022-00337-5
+- https://www.codabench.org/api/competitions/17954/ — https://www.codabench.org/api/competitions/17954/
+- https://www.instagram.com/p/DYcvUJ8CtEq/ — https://www.instagram.com/p/DYcvUJ8CtEq/
+- https://huggingface.co/BAAI/bge-m3/tree/main — https://huggingface.co/BAAI/bge-m3/tree/main
+- https://huggingface.co/BAAI/bge-m3/discussions/64 — https://huggingface.co/BAAI/bge-m3/discussions/64
+- https://ieeexplore.ieee.org/document/10902362 — https://ieeexplore.ieee.org/document/10902362
+- https://arxiv.org/abs/2610.12083 — https://arxiv.org/abs/2610.12083
+- https://docs.codabench.org/latest/Organizers/Benchmark_Creation/Yaml-Structure/ — https://docs.codabench.org/latest/Organizers/Benchmark_Creation/Yaml-Structure/
+- https://ieeexplore.ieee.org/document/11042497 — https://ieeexplore.ieee.org/document/11042497
+- https://ieeexplore.ieee.org/document/9669272 — https://ieeexplore.ieee.org/document/9669272
+- https://www.cope.es/emisoras/andalucia/granada-provincia/granada/noticias/universidad-granada-e-ifmif-dones-retan-comunidad-cientifica-internacional-crear-inteligencia-artificial-experta-recursos-reducidos-20261006_3450385.html — https://www.cope.es/emisoras/andalucia/granada-provincia/granada/noticias/universidad-granada-e-ifmif-dones-retan-comunidad-cientifica-internacional-crear-inteligencia-artificial-experta-recursos-reducidos-20261006_3450385.html
+- https://www.codabench.org/competitions/14673/ — https://www.codabench.org/competitions/14673/
+- https://cis.ieee.org/activities/technical-activities/2026-technical-challenge-on-domain-specific-question-answering-with-llms — https://cis.ieee.org/activities/technical-activities/2026-technical-challenge-on-domain-specific-question-answering-with-llms
+- https://ieeexplore.ieee.org/document/11049984 — https://ieeexplore.ieee.org/document/11049984
+- https://huggingface.co/docling-project/docling-models/tree/772af5ea013c6bd049ade7baa7a160456ab9613c — https://huggingface.co/docling-project/docling-models/tree/772af5ea013c6bd049ade7baa7a160456ab9613c
+- https://github.com/allenai/longformer/blob/master/scripts/triviaqa.py — https://github.com/allenai/longformer/blob/master/scripts/triviaqa.py
+- https://bge-model.com/bge/bge_reranker_v2.html — https://bge-model.com/bge/bge_reranker_v2.html
+- https://huggingface.co/datasets/John6666/forum3/blame/main/ft_qwen25_06b_for_domain_knowledge_reasoning_1.md — https://huggingface.co/datasets/John6666/forum3/blame/main/ft_qwen25_06b_for_domain_knowledge_reasoning_1.md
+- https://modelscope.cn/models/ds4sd/docling-models — https://modelscope.cn/models/ds4sd/docling-models
+- https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/evaluation — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/evaluation
+- https://github.com/EleutherAI/lm-evaluation-harness/blob/main/lm_eval/tasks/ruler/qa_utils.py — https://github.com/EleutherAI/lm-evaluation-harness/blob/main/lm_eval/tasks/ruler/qa_utils.py
+- https://www.codabench.org/competitions/17954/#/pages-tab — https://www.codabench.org/competitions/17954/#/pages-tab
+- https://www.jxxy.net/ai/articles/simonw-qwen38-27b-addition-in-words/ — https://www.jxxy.net/ai/articles/simonw-qwen38-27b-addition-in-words/
+- https://heyadept.com/blog/llm-as-judge-in-production-mitigating-evaluator-drift — https://heyadept.com/blog/llm-as-judge-in-production-mitigating-evaluator-drift
+- https://arxiv.org/html/2603.22214v1 — https://arxiv.org/html/2603.22214v1
+- https://www.sciencedirect.com/science/article/pii/S2666389922001465 — https://www.sciencedirect.com/science/article/pii/S2666389922001465
+- https://ieeexplore.ieee.org/document/9481915/ — https://ieeexplore.ieee.org/document/9481915/
+- https://gitlab.lisn.upsaclay.fr/obada/codabench_wiki/-/commit/2838de32f5776b8ad76a4cf2cdecdb9fadaace30.patch — https://gitlab.lisn.upsaclay.fr/obada/codabench_wiki/-/commit/2838de32f5776b8ad76a4cf2cdecdb9fadaace30.patch
+- https://ieeexplore.ieee.org/ielx7/6287639/10005208/10255647.pdf?tp=&arnumber=10255647&isnumber=10005208&ref= — https://ieeexplore.ieee.org/ielx7/6287639/10005208/10255647.pdf?tp=&arnumber=10255647&isnumber=10005208&ref=
+- https://www.kaggle.com/competitions/ieee-fraud-detection/leaderboard — https://www.kaggle.com/competitions/ieee-fraud-detection/leaderboard
+- https://www.codabench.org/competitions/10361 — https://www.codabench.org/competitions/10361
+- https://publikationen.bibliothek.kit.edu/1000186366/168774616 — https://publikationen.bibliothek.kit.edu/1000186366/168774616
+- https://www.honda-ri.de/congrats-to-our-colleagues-on-the-winner-board-of-ieee-cis-technical-challenge/ — https://www.honda-ri.de/congrats-to-our-colleagues-on-the-winner-board-of-ieee-cis-technical-challenge/
+- https://www.codabench.org/api/competitions/17954/leaderboards/ — https://www.codabench.org/api/competitions/17954/leaderboards/
+- https://ieeexplore.ieee.org/document/9627669/ — https://ieeexplore.ieee.org/document/9627669/
+- https://github.com/bpmn-io/bpmn-js-examples/blob/master/custom-meta-model/resources/qa.json — https://github.com/bpmn-io/bpmn-js-examples/blob/master/custom-meta-model/resources/qa.json
+- https://pmc.ncbi.nlm.nih.gov/articles/PMC9278500/ — https://pmc.ncbi.nlm.nih.gov/articles/PMC9278500/
+- https://www.codabench.org/api/competitions/17954/phases/ — https://www.codabench.org/api/competitions/17954/phases/
+- https://huggingface.co/cstr/bge-m3-GGUF — https://huggingface.co/cstr/bge-m3-GGUF
+- https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/02_rag/main.py — https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/02_rag/main.py
+- https://www.codabench.org/competitions/8327/ — https://www.codabench.org/competitions/8327/
+- https://www.codabench.org/competitions/external/?page=1 — https://www.codabench.org/competitions/external/?page=1
+- https://www.codabench.org/competitions/5242/ — https://www.codabench.org/competitions/5242/
+- https://huggingface.co/blog/jialinyyzz/llm-judge-grpo-fact-fidelity — https://huggingface.co/blog/jialinyyzz/llm-judge-grpo-fact-fidelity
+- https://arxiv.org/html/2606.19544 — https://arxiv.org/html/2606.19544
+- https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/ — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/
+- https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/README.md — https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/README.md
+- https://latenteval.ai/research/llm-as-a-judge-bias — https://latenteval.ai/research/llm-as-a-judge-bias
+- https://x.com/IFMIF_DONES/status/2107054635764638162 — https://x.com/IFMIF_DONES/status/2107054635764638162
+- https://canal.ugr.es/noticia/competicion-internacional-llms-especializados-ifmif-dones-ug/ — https://canal.ugr.es/noticia/competicion-internacional-llms-especializados-ifmif-dones-ug/
+- https://github.com/jucls/IEEE-CIS-DSQA-Starter-Kit — https://github.com/jucls/IEEE-CIS-DSQA-Starter-Kit
+- https://docling-project.github.io/docling/usage/model_catalog/ — https://docling-project.github.io/docling/usage/model_catalog/
+- https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/join-the-challenge/ — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/join-the-challenge/
+- https://www.codabench.org/competitions/17954/ — https://www.codabench.org/competitions/17954/
+- https://ar5iv.labs.arxiv.org/html/2507.07024 — https://ar5iv.labs.arxiv.org/html/2507.07024
+- https://github.com/jucls/IEEE-CIS-DSQA-Starter-Kit/blob/main/02_rag/main.py — https://github.com/jucls/IEEE-CIS-DSQA-Starter-Kit/blob/main/02_rag/main.py
+- https://www.alphaxiv.org/abs/2606.19544 — https://www.alphaxiv.org/abs/2606.19544
+- https://cis.taskforce.ieee.org/gpais/wp-content/uploads/sites/6/2026/09/IEEE-CIS-Technical-Challenge-on-Domain-Specific-Question-Answering-with-LLMs-Contest-Rules.pdf — https://cis.taskforce.ieee.org/gpais/wp-content/uploads/sites/6/2026/09/IEEE-CIS-Technical-Challenge-on-Domain-Specific-Question-Answering-with-LLMs-Contest-Rules.pdf
+- (không tiêu đề) — https://www.researchgate.net/publication/389721709_IFMIF-DONES

@@ -1,29 +1,38 @@
-# PROGRESS — cập nhật: <YYYY-MM-DD HH:MM> bởi <claude / antigravity / tên bạn>
+# PROGRESS — cập nhật: 2026-10-15 bởi claude
 > File này là "bộ nhớ" của dự án. Hook SessionStart tự nạp nó sau mỗi lần mở phiên / compact / clear.
 > Giữ ngắn (< 80 dòng). Ghi đè thay vì viết thêm.
 
 ## Mục tiêu hiện tại
-- <vd: vượt 0.80 macro-F1 local, trong top 20 LB trước 20/10>
+- Vào top 20 Public LB (ngưỡng hiện 59.05; top 69.05) trước 2026-10-26, rồi đẩy lên ≥ 69 với mô-đun CI cho paper Phase 2.
 
 ## Điểm tốt nhất
 | Metric local | LB public | File nộp | Thí nghiệm | Ghi chú |
 |---|---|---|---|---|
-| — | — | — | — | — |
+| — | — | — | — | chưa nộp; mốc BTC: zero-shot 29.05 / 733 s, RAG 57.14 / 2080 s |
 
 ## Đang làm
-- Việc: <ID trong PLAN + mô tả>
-- Giả thuyết: <...>
-- Sẽ sửa: <file1, file2>
-- Trạng thái: <chưa bắt đầu / đang code / đang train / chờ kết quả>
+- Việc: P2 (eval harness) + P3 (corpus dev nguồn mở) — chờ người dùng duyệt bắt đầu
+- Trạng thái: chưa bắt đầu
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
-- <ngày> — <việc> → <kết quả>
+- 2026-10-15 — P1: `.venv` khớp server (torch 2.8.0+cu128 thấy sm_120, transformers 5.17.0, pip check sạch; bỏ triton vì chỉ có Linux). Smoke test Olmo-3-7B: 4bit 9 tok/s · 4.9 GiB; bf16 11 tok/s · 13.6 GiB; 8bit 2.8 tok/s
+- 2026-10-15 — Council round_01 (8 model vòng 1; vòng 2 chỉ deepseek do OpenRouter hết hạn mức ngày) → SYNTHESIS + REFERENCES (40 nguồn đã mở), PLAN cập nhật P0–P6
+- 2026-10-15 — Chép kit v10, clone starter kit BTC vào `starter_kit/` (@5e596be), điền AGENTS.md mục 1
 
 ## Bước tiếp theo (1–3 việc, có lệnh chạy)
-1. <...>
+1. P0 (người dùng): đăng ký trước 1/11
+2. P2 + P3: eval harness (judge nhị phân, predictions.csv) + corpus dev nguồn mở; kiểm môi trường: `.venv\Scripts\python scripts/smoke_test.py --n 3`
+3. P4: cải tiến baseline → rồi mới thuê H100 (P1b) để đo 32B trước khi nộp
 
 ## Vướng mắc / câu hỏi mở
-- <...>
+- Đã rõ (BTC 15/10): dev dùng model cùng kiến trúc (Olmo-3-7B-Instruct), cùng transformers 5.17.0. Ngân sách thuê GPU thoải mái. Dữ liệu thêm chỉ từ nguồn mở.
+- Còn mở: bundle reranker có được không (tiền lệ BTC bundle MiniLM → rủi ro thấp).
+- Domain nào có 15 câu trong public (đoán DONES theo tỉ lệ mẫu, chưa chắc).
+- OpenRouter key giới hạn $7/ngày → hội đồng `all` 2 vòng không đủ; muốn chạy lại vòng 2 thì nâng hạn mức hoặc chờ reset.
 
 ## Bẫy đã biết (đừng lặp lại)
-- <vd: augment X làm lệch phân phối → giảm 2 điểm (exp-007)>
+- Đừng ép "chỉ dùng số trong context": gold dùng cả kiến thức chuẩn (ln2, khối lượng riêng Li) và có câu tiền đề sai.
+- Đừng chọn model > 1 GB để bundle (BGE-M3, bge-reranker-v2-m3). Đừng trông vào Docling table structure trên server.
+- Một lượt nộp = 1 ngày: luôn chạy smoke test + kiểm zip giải nén < 900 MB trước khi nộp.
+- bnb 8-bit (LLM.int8) rất chậm (2.8 tok/s) → dev dùng 4-bit. Tốc độ/bộ nhớ của 7B (MHA 32/32) KHÔNG suy ra được 32B (GQA 40/8).
+- `triton` không có wheel Windows → venv local thiếu triton; kiểm lại trên Linux (H100 thuê) trước khi nộp.

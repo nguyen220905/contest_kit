@@ -11,10 +11,11 @@
 | — | — | — | — | chưa nộp; mốc BTC: zero-shot 29.05 / 733 s, RAG 57.14 / 2080 s |
 
 ## Đang làm
-- Việc: Stage 1 của `docs/STAGES.md` v3 — harness xong (commit `057ff50`); còn lượt bf16 (đang chạy, chậm do GPU dùng chung) + bài nộp D1 `02-safe`
-- Trạng thái: chờ lượt bf16; D1 chưa bắt đầu
+- Việc: D1 `02-safe` — zip `submissions/d1_02_safe.zip` (399 MB) đã build + smoke test OK; **chờ người dùng upload Codabench**
+- Tiếp theo: Stage 2 (judge gọn) + Stage 3 (tài liệu gold cho 25 câu mẫu); D2 evidence-last chuẩn bị song song
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
+- 2026-10-22 — D1 build + smoke (bản giải nén zip, offline, 2 PDF): 3/3 câu OK; 4-bit vs bf16 3/3 câu khác chữ (exp-001)
 - 2026-10-22 — Council round_06 (đủ 8 model) chấm STAGES v2: TB 6.8/10, trung vị 7, "sửa nhỏ rồi làm" → STAGES v3 (D1 nộp sớm, Stage 5 hoãn, Stage 3b thêm oracle-chunk/evidence-last)
 - 2026-10-22 — Stage 1 harness: 01_zero_shot 7B 4-bit sample25 ×2 → local tất định (0/25 khác chữ), token p50/p95 597/1738, 77–89 s/câu
 - 2026-10-22 — Council round_02 chấm plan P2+P3: chỉ DeepSeek trả lời (key OpenRouter HẾT HẠN, 401) → 5/10 và 6/10, "sửa nhỏ rồi làm"; STAGES.md v2

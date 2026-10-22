@@ -35,3 +35,8 @@ coverage/
 # claude local
 .claude/settings.local.json
 .claude/state/
+
+# submissions (weights + built zips)
+submissions/*/docling_models/
+submissions/*/embed_model/
+submissions/*.zip

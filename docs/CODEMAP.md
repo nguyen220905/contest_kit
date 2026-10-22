@@ -16,6 +16,7 @@ Chưa có pipeline của đội. `starter_kit/` = code mẫu của BTC (chỉ đ
 | `scripts/smoke_test.py` | Smoke test môi trường | transformers, bitsandbytes | `--quant 4bit` mặc định |
 | `eval/run_pipeline.py` | Harness: import `<submission>/main.py`, gọi `answer()` tuần tự 1 process như server → `results/<run>/predictions.csv` (ghi từng dòng) + `run_info.json` (thời gian, token, VRAM, dự phóng public/private) | torch, transformers, `eval/dev_shim.py` | `--split sample25` đọc thẳng starter_kit khi chưa có `data/splits/` |
 | `eval/dev_shim.py` | CHỈ local: vá `AutoModelForCausalLM.from_pretrained` chèn bnb 4/8-bit | bitsandbytes | server không có |
+| `submissions/d1_02_safe/main.py` | Bài nộp D1: 02_rag + vá an toàn (PDF đệ quy/hoa thường, cache cả trạng thái lỗi, try/except) | docling, sentence-transformers | build: `submissions/d1_02_safe/build.py` → `submissions/d1_02_safe.zip` |
 | `eval/compare_runs.py` | So 2 run theo id: số câu khác chữ, lỗi, token, latency (+ verdict lật khi có) | — | đo nhiễu / lệch shim |
 
 ## Luồng dữ liệu

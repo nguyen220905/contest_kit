@@ -63,10 +63,11 @@ Trạng thái: lập kế hoạch
   - [x] Bài giả ném exception / trả non-str → ghi lỗi, chạy tiếp
   - [x] Dự phóng public/private + cảnh báo vượt giới hạn có trong run_info.json
   - [x] Local tất định: 2 lượt 4-bit 0/25 câu khác chữ
-  - [ ] Lệch shim: lượt bf16 (`results/exp001_zs_bf16`) so với 4-bit — số câu khác chữ; verdict lật đo sau Stage 2
+  - [~] Lệch shim: bf16 dừng sau 3 câu (VRAM tràn, GPU dùng chung) → 3/3 câu khác chữ so với 4-bit; đo đủ + verdict lật trên GPU thuê / sau Stage 2
   - [ ] D1 `02-safe` = 02 nguyên bản + chỉ vá không đổi hành vi trên corpus phẳng: tìm PDF đệ quy, không phân biệt hoa thường;
         try/except từng câu trả chuỗi fallback, KHÔNG load lại model khi lỗi (cache cả trạng thái lỗi); giữ prompt, 10k, 2048, greedy
-  - [ ] Zip D1: `main.py` ở gốc, giải nén ≤ 1 GB, không chứa `eval/`/`dev_shim`; chạy qua harness `--offline` trên vài PDF thật → mọi câu trả str
+        — code + zip xong (`submissions/d1_02_safe.zip`), chờ người dùng nộp
+  - [x] Zip D1: `main.py` ở gốc, giải nén 435 MB, không chứa `eval/`/`dev_shim`; harness `--offline` từ bản giải nén, 2 PDF thật → 3/3 câu trả str (results/s1_d1_smoke)
 - Bằng chứng: exp001_zs_4bit_a/b (run_info.json), compare_runs 0/25.
 
 ## Stage 2: Judge + metrics (gọn) — chưa làm

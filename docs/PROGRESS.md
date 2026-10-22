@@ -1,4 +1,4 @@
-# PROGRESS — cập nhật: 2026-10-15 bởi claude
+# PROGRESS — cập nhật: 2026-10-22 bởi claude
 > File này là "bộ nhớ" của dự án. Hook SessionStart tự nạp nó sau mỗi lần mở phiên / compact / clear.
 > Giữ ngắn (< 80 dòng). Ghi đè thay vì viết thêm.
 
@@ -15,6 +15,7 @@
 - Trạng thái: chưa bắt đầu
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
+- 2026-10-22 — Đọc Discord BTC → `docs/DISCORD.md`: được bundle model bất kỳ (kể cả LLM khác), judge tất định, private 2h là giới hạn mềm, corpus không công bố kích thước
 - 2026-10-15 — P1: `.venv` khớp server (torch 2.8.0+cu128 thấy sm_120, transformers 5.17.0, pip check sạch; bỏ triton vì chỉ có Linux). Smoke test Olmo-3-7B: 4bit 9 tok/s · 4.9 GiB; bf16 11 tok/s · 13.6 GiB; 8bit 2.8 tok/s
 - 2026-10-15 — Council round_01 (8 model vòng 1; vòng 2 chỉ deepseek do OpenRouter hết hạn mức ngày) → SYNTHESIS + REFERENCES (40 nguồn đã mở), PLAN cập nhật P0–P6
 - 2026-10-15 — Chép kit v10, clone starter kit BTC vào `starter_kit/` (@5e596be), điền AGENTS.md mục 1
@@ -26,7 +27,7 @@
 
 ## Vướng mắc / câu hỏi mở
 - Đã rõ (BTC 15/10): dev dùng model cùng kiến trúc (Olmo-3-7B-Instruct), cùng transformers 5.17.0. Ngân sách thuê GPU thoải mái. Dữ liệu thêm chỉ từ nguồn mở.
-- Còn mở: bundle reranker có được không (tiền lệ BTC bundle MiniLM → rủi ro thấp).
+- Đã rõ (Discord 19/10): được bundle model bất kỳ, kể cả LLM khác Olmo — chỉ giới hạn zip 1 GB + thời gian.
 - Domain nào có 15 câu trong public (đoán DONES theo tỉ lệ mẫu, chưa chắc).
 - OpenRouter key giới hạn $7/ngày → hội đồng `all` 2 vòng không đủ; muốn chạy lại vòng 2 thì nâng hạn mức hoặc chờ reset.
 

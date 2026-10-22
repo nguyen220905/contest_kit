@@ -16,34 +16,39 @@
   retrieval "mù" (không biết câu hỏi thuộc tài liệu nào). Trả về không phải `str` = không trả lời.
 - Metric: **domain-balanced accuracy** (cân bằng giữa 2 domain), chấm tự động bằng LLM judge; càng cao càng tốt.
   Hoà điểm → bài chạy nhanh hơn thắng. BTC KHÔNG trả output, chỉ status + điểm (lỗi: hover status xem lý do ngắn).
+  Judge **tất định** (output giống hệt → điểm giống hệt); điểm dao động giữa 2 lần nộp cùng zip là do generation không tất định.
+- Câu trả lời của BTC trên Discord: **`docs/DISCORD.md`** (nguồn sự thật cho luật, ưu tiên hơn trang Codabench khi mâu thuẫn).
 - Hạn nộp: đăng ký + lập đội đóng **1/11/2026**; Public LB đóng **30/11/2026 23:55 UTC** (theo phase Codabench; trang Timeline ghi 23:59)
   = 06:55 ngày 1/12 giờ VN. Private LB 1–3/12: BTC tự chấm lại bài public tốt nhất, không nộp thêm. 3/12 công bố Phase 1;
   đội được chọn viết paper IEEE 4 trang + chuyên gia chấm câu trả lời (Phase 2) → kết quả 14/12/2026.
   Ràng buộc: **1 bài/ngày/đội** (tối đa 60 ở public). Không tự chọn bài cuối — bài có điểm public cao nhất được dùng. Đội ≤ 4 người.
 - Luật cứng:
-  - LLM của challenge: `model_id` = `allenai/Olmo-3.1-32B-Instruct`, load kiểu `AutoModelForCausalLM.from_pretrained(model_id)`
-    (đã cache sẵn trên server, offline). Luôn dùng `corpus_dir` được truyền vào, không hard-code đường dẫn.
-  - BTC trả lời trên Discord (user dẫn lại, 15/10/2026): "you may use a different model in your internal pipeline to try.
-    Just make sure you use the same Transformers library"; sau đó BTC xác nhận thêm: dùng model **cùng kiến trúc** với model thi,
-    không nhất thiết 32B → dev/test dùng `allenai/Olmo-3-7B-Instruct` (cùng `Olmo3ForCausalLM`, vocab 100278, ctx 65536,
-    sliding window 4096; khác: 7B có 32/32 head, 32B có 40/8 GQA → bộ nhớ/thời gian của 7B KHÔNG suy ra 32B), miễn cùng `transformers==5.17.0`.
-    Bài nộp thực tế vẫn sinh bằng Olmo-3.1-32B (chỉ model này có sẵn trên server; 7B ~14.6 GB không vừa zip 1 GB).
-    Model phụ (embedder, layout Docling…) phải bundle trong zip — `starter_kit/02_rag` làm đúng như vậy.
+  - Base LLM có sẵn: `model_id` = `allenai/Olmo-3.1-32B-Instruct` (đã cache trên server, offline), code của mình tự load
+    (kiểu `AutoModelForCausalLM.from_pretrained(model_id)` như starter kit). Luôn dùng `corpus_dir` được truyền vào, không hard-code đường dẫn.
+  - **Model khác: ĐƯỢC PHÉP** (BTC Jaime, Discord 3/10 + 19/10): bundle bất kỳ model nào, sinh văn bản hay không; Olmo không bắt buộc
+    là LLM duy nhất (có thể không dùng LM). Câu "the only model you may load" đã bị xoá khỏi Codabench. Ràng buộc thật: zip ≤ 1 GB + thời gian.
+    Model phụ phải bundle trong zip (server offline) — `starter_kit/02_rag` bundle MiniLM + layout Docling.
+  - Dev/test local (Isaac, Discord 29/9 + user dẫn 15/10): dùng model nhỏ **cùng kiến trúc**, cùng `transformers==5.17.0`
+    → `allenai/Olmo-3-7B-Instruct` (cùng `Olmo3ForCausalLM`, vocab 100278, ctx 65536, sliding window 4096; khác: 7B có 32/32 head,
+    32B có 40/8 GQA → bộ nhớ/thời gian của 7B KHÔNG suy ra 32B).
   - Không internet lúc chạy; chỉ dùng package trong `starter_kit/requirements-participant.txt` (đúng version). Thiếu → xin ở kênh
     #dependencies trên Discord. Không có vLLM, flash-attn (chỉ transformers/accelerate, sdpa/eager).
   - Dữ liệu ngoài được phép nếu trích dẫn trong tài liệu nộp kèm. Index/embedding/prompt chuẩn bị trước (có internet) được bundle.
   - **Cấm** tấn công/jailbreak LLM judge → loại ngay.
 - Tài nguyên:
-  - Server chấm: 1×H100 80GB, 32 CPU, 128GB RAM. Giới hạn wall-clock tính cả load model: **1h** (public), ≤ 2h (private).
+  - Server chấm: 1×H100 80GB, 32 CPU, 128GB RAM. Giới hạn wall-clock tính cả load model: **1h cứng** (public: quá giờ = bài không hợp lệ);
+    private 2h **mềm** cho 100 câu: chỉ câu trả lời xong trong 2h mới được chấm → giữ thời gian public ≤ ~45 phút để private còn dư.
     Zip giải nén ≤ **1GB**. Chạy lần lượt (thời gian chờ hàng đợi không tính).
+    Lỗi trong `answer()` không được làm load lại model (ca thật trên Discord: reload mỗi câu → OOM toàn bài).
     Tham chiếu: `02_rag` mất ~36 phút cho cả corpus + 50 câu → parse PDF + generate là nút thắt thời gian.
   - Máy local: RTX 5060 Ti 16GB. Python 3.11 hệ thống đang có torch 2.10 **CPU-only** + transformers 5.3.0 → cần venv riêng khớp server
     (torch 2.8.0 bản CUDA, transformers 5.17.0). Olmo-32B không chạy được local (bf16 ~64GB; 4-bit vẫn > 16GB)
-    → dev local bằng Olmo-3-7B-Instruct 8-bit.
+    → dev local bằng Olmo-3-7B-Instruct 4-bit.
   - GPU cloud: ngân sách thuê **thoải mái** (user, 15/10/2026) → thuê 1×H100 80GB giống server để chạy Olmo-3.1-32B thật
     (đo thời gian end-to-end, hành vi/format câu trả lời) trước khi tiêu lượt nộp.
 - Dữ liệu dev: `starter_kit/sample/sample_qa.json` — 25 câu có đáp án mẫu (DONES 10, AI Papers 15; trường `question_type`).
-  KHÔNG có corpus PDF; `starter_kit/sample/sites.txt` liệt kê các nguồn mà corpus được lấy từ đó.
+  KHÔNG có corpus PDF; `starter_kit/sample/sites.txt` liệt kê các nguồn mà corpus được lấy từ đó. Kích thước corpus thật
+  KHÔNG công bố (BTC 7/10) → dựng corpus local nhỏ rồi tăng dần, đo cách pipeline chịu tải khi corpus lớn.
   Dữ liệu/corpus bổ sung: **chỉ đào từ nguồn mở** (open access: arXiv, JACoW, EUROfusion, PMC…), ghi nguồn để trích dẫn khi nộp.
 - `starter_kit/` = bản sao upstream `jucls/IEEE-CIS-DSQA-Starter-Kit` @ `5e596be` (2026-09-29) — chỉ đọc, code của mình để chỗ khác.
 - Lệnh chuẩn (chạy từ gốc repo, Python = `.venv\Scripts\python` — Python 3.11, torch 2.8.0+cu128, transformers 5.17.0):

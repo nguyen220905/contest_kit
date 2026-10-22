@@ -14,6 +14,13 @@ Chi tiết + bằng chứng: `docs/council/round_01/SYNTHESIS.md` · nguồn cho
 - Zip 1 GB: BGE-M3 / bge-reranker-v2-m3 (2.27 GB) không vừa. Docling không bật table structure được trên server (`starter_kit/02_rag/main.py:60`).
 - Baseline 02_rag dễ vỡ: `glob("*.pdf")` không đệ quy (`02_rag/main.py:89`), `answer()` không try/except → luôn bọc và luôn trả `str`.
 
+## Dữ kiện từ Discord BTC (đọc 2026-10-22, chi tiết `docs/DISCORD.md`)
+- **Được bundle model bất kỳ** (sinh hay không), Olmo không bắt buộc là LLM duy nhất; "only model you may load" đã xoá. Còn lại: zip 1 GB + thời gian.
+- Judge **tất định** → nộp lại cùng zip mà điểm đổi là do generation không tất định. Nhiễu LB = nhiễu sinh câu trả lời, không phải judge.
+- Private 2h là giới hạn **mềm**: câu nào chưa xong khi hết 2h thì mất điểm câu đó → giữ thời gian public ≤ ~45 phút.
+- Kích thước corpus thật không công bố → harness phải đo được thời gian theo kích thước corpus (corpus local tăng dần).
+- Không có output nào từ server; chỉ có thông báo lỗi ngắn khi fail. Lỗi không được kéo theo load lại model (ca thật: reload mỗi câu → OOM).
+
 ## Mốc
 - M0: đăng ký xong (form + Codabench cùng email) (hạn: **2026-10-31**, đăng ký đóng 1/11)
 - M1: venv khớp server (local + H100 thuê) + eval harness + corpus dev, đo Recall@k của retrieval baseline (hạn: 2026-10-22)
@@ -24,7 +31,7 @@ Chi tiết + bằng chứng: `docs/council/round_01/SYNTHESIS.md` · nguồn cho
 ## Backlog
 | ID | Thí nghiệm / việc | Nguồn | Kỳ vọng | Tự tin | Chi phí | Trạng thái |
 |---|---|---|---|---|---|---|
-| P0 | (người dùng) Hoàn tất đăng ký. Luật model đã rõ cho dev (BTC: cùng kiến trúc là được); nếu bundle reranker thì hỏi xác nhận thêm (câu mẫu ở SYNTHESIS §4C) | setup + BTC 15/10 | — | cao | S | todo |
+| P0 | (người dùng) Hoàn tất đăng ký — **mọi thành viên** điền form; đội = organisation trên Codabench. Luật model đã rõ (Discord 19/10), không cần hỏi thêm | setup + BTC Discord | — | cao | S | todo |
 | P1 | Venv local khớp server (torch 2.8.0+cu128, transformers 5.17.0, đúng requirements-participant.txt) + smoke test với Olmo-3-7B-Instruct (dev mặc định 4-bit: 9 tok/s, 4.9 GiB) | setup + BTC 15/10 | hạ tầng | cao | S | **xong 15/10** |
 | P1b | "Server giả lập" trên 1×H100 80GB thuê: cùng requirements, Olmo-3.1-32B bf16, script chạy `answer()` cho cả corpus dev + đo thời gian end-to-end (gồm load model, parse PDF); hiệu chỉnh bằng 02_rag (LB 2080 s). Mọi bài nộp phải qua đây trước | user 15/10 (ngân sách thuê thoải mái) | hạ tầng; tránh mất lượt nộp | cao | M | hoãn — user: thuê sau khi cải tiến baseline |
 | P2 | Eval harness: `results/<run>/predictions.csv` + `metrics.json` (domain-balanced kiểu 15/35), judge nhị phân hiệu chỉnh: chấm đúng ≥ 24/25 gold, bác ≥ 90% gold bị làm sai số/đơn vị; ngưỡng quyết định ≥ 3 câu lật trên holdout | council-r01/M8-C + G | hạ tầng | cao | S | todo |
@@ -35,11 +42,12 @@ Chi tiết + bằng chứng: `docs/council/round_01/SYNTHESIS.md` · nguồn cho
 
 Hoãn (chỉ làm khi có bằng chứng cần): HyDE / multi-query (council-r01, lợi ích thấp với câu số liệu) · self-consistency k>1 (nhân thời gian) ·
 document-first đọc cả paper 12–16k token khi doc-hit@1 cao (kimi, thiểu số) · agent ReAct nhiều bước (kimi, thiểu số) ·
-prompt lookup decoding (giảm thời gian, cần đo trên Olmo-32B ở P1b).
+prompt lookup decoding (giảm thời gian, cần đo trên Olmo-32B ở P1b) ·
+LLM phụ bundle ≤ 1 GB (draft model cho speculative decoding, rewrite query, reranker kiểu LLM) — **được phép** từ Discord 19/10;
+Olmo không có bản nhỏ cùng tokenizer vừa 1 GB → draft khác tokenizer cần universal assisted decoding, phải đo lợi thời gian thật ·
+LoRA/adapter cho Olmo-32B — luật cho phép, thuê H100 được; vẫn thiếu dữ liệu train (chỉ có câu tổng hợp) → cân nhắc sau P4.
 
 ## Đã loại (và lý do)
 - Nộp lại 01_zero_shot / 02_rag nguyên bản — LB đã có điểm của BTC (29.05 / 57.14), tốn lượt vô ích (council-r01/grok, đã kiểm API).
 - BGE-M3, bge-reranker-v2-m3 — 2.27 GB, fp16 ~1.14 GB, vượt zip 1 GB. Thay bằng bge-small/bge-base, mxbai-rerank-base / bge-reranker-base.
-- Draft LLM cho speculative decoding, LLM khác để rewrite query — vùng xám "the only model you may load"; dùng chính Olmo hoặc prompt lookup decoding.
-- LoRA/adapter domain cho Phase 1 — không có dữ liệu train, không chạy được 32B local, rủi ro cao; không model nào ủng hộ.
 - Docling table structure — server thiếu cv2/libGL (`starter_kit/02_rag/main.py:60`); bảng lấy bằng PyMuPDF `find_tables` / pdfplumber.

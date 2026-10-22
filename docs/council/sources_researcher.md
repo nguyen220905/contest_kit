@@ -58,3 +58,24 @@
 - Saad-Falcon et al., ARES, NAACL 2024 (arXiv 2311.09476) — https://arxiv.org/abs/2311.09476 — [đã mở] judge tự động + prediction-powered inference với vài trăm nhãn người để hiệu chỉnh khoảng tin cậy.
 - Rahmani et al., Synthetic Test Collections for Retrieval Evaluation, SIGIR 2024 (arXiv 2405.07767) — https://arxiv.org/abs/2405.07767 — [đã mở] query + judgment tổng hợp cho kết quả xếp hạng gần test collection người làm; bias với hệ cùng LLM nhỏ.
 - Filice et al., Generating Diverse Q&A Benchmarks for RAG Evaluation with DataMorgana, ACL 2025 Industry (arXiv 2501.12789) — https://arxiv.org/abs/2501.12789 — [search] cấu hình phân bố loại câu/người hỏi → câu đa dạng hơn; dùng cho SIGIR LiveRAG 2025.
+
+# Bổ sung 2026-10-22 (round_06: chấm lại plan v2 bằng đủ 8 model; Ollama + A100)
+> Perplexity `--ask` chạy lại được (key mới): docs/research/20261022-1252-pro-a100-...md, docs/research/20261022-1253-pro-ollama-...md.
+
+## A100 vs H100
+- NVIDIA H100 / A100 datasheet (qua Perplexity) — https://www.nvidia.com/en-us/data-center/h100/ · https://www.nvidia.com/en-us/data-center/a100/ — [Perplexity] băng thông HBM 3.35 vs 2.039 TB/s (SXM; A100 PCIe 1.935) → decode bs=1 ~1.6×; BF16 dense 989 vs 312 TFLOPS → prefill tối đa ~3.2× (thực tế thấp hơn).
+- Hyperstack, LLM Inference Benchmark A100 NVLink vs H100 SXM5 — https://www.hyperstack.cloud/technical-resources/performance-benchmarks/llm-inference-benchmark-comparing-nvidia-a100-nvlink-vs-nvidia-h100-sxm — [đã mở] vLLM, Llama-3.1-70B, batch 64: 1148 vs 3311 tok/s (2.8×) — KHÔNG phải bs=1, không áp trực tiếp cho transformers greedy.
+- Docling GPU support — https://docling-project.github.io/docling/usage/gpu/ — [đã mở] GPU dùng cho layout/OCR; RTX 5090 7.9 trang/s (không OCR), RTX 5070 4.2, L40S 3.1; không có số A100/H100; `page_batch_size`/`layout_batch_size` quyết định throughput.
+- Docling issue #1364 "Layout model is slow on all CUDA GPUs" — https://github.com/docling-project/docling/issues/1364 — [Perplexity] GPU util 0–20% trên A100, chỉ ~2× so CPU → Docling bị chặn bởi CPU/pipeline, khác biệt GPU ít quyết định.
+
+## Ollama / GGUF
+- Ollama library olmo-3 — https://ollama.com/library/olmo-3 — [đã mở] 7b-instruct 4.5 GB Q4_K_M, ctx 64K; tham số mặc định temperature 0.6, top_p 0.95 (không phải greedy).
+- Ollama library olmo-3.1 — https://ollama.com/library/olmo-3.1 — [đã mở] có `olmo-3.1:32b-instruct` 19 GB (Q4) → không vừa trọn 16 GB VRAM, chạy được với offload CPU (chậm) — proxy hành vi 32B duy nhất ở local.
+- Ollama FAQ — https://docs.ollama.com/faq — [đã mở] context mặc định 4096 token; đặt `num_ctx` qua API / `OLLAMA_CONTEXT_LENGTH` → prompt RAG 10–12k sẽ bị CẮT nếu quên.
+- Ollama Modelfile reference — https://docs.ollama.com/modelfile — [Perplexity] TEMPLATE/SYSTEM riêng của Ollama; phải so token-by-token với HF `apply_chat_template` (Olmo 3 có system prompt mặc định).
+- llama.cpp quantize docs — https://ggml-org-llama-cpp.mintlify.app/models/quantizing-models — [Perplexity] Q8_0 ~+0.003 PPL, Q4_K_M ~+0.18 (Llama-3-8B) → Q4 làm lật token greedy sớm, output khác hẳn.
+
+## EzyCloudX GPU (bổ sung 22/10, chạy lại round_06)
+- Perplexity: docs/research/20261022-1306-pro-rtx-pro-6000-blackwell-server-workstation-96gb-gdd.md — [Perplexity] PRO 6000 WS 1.792 TB/s, A100-40GB SXM 1.555 TB/s; trần decode 64 GB/token: H100 ~52, PRO 6000 ~28, A100 ~24 tok/s; torch 2.7/2.8 cu128 hỗ trợ sm_120; `device_map="auto"` = tuần tự.
+- flopper.io, NVIDIA RTX PRO 6000 Blackwell Server Edition — https://flopper.io/gpu/nvidia-rtx-pro-6000-blackwell-server-edition — [đã mở] Server Edition 1,597 GB/s, BF16 dense 500 / sparse 1000 TFLOPS, 600 W → prefill H100/PRO6000 ~2×, decode ~1.9–2.1×.
+- NVIDIA RTX PRO 6000 Max-Q datasheet — https://www.nvidia.com/content/dam/en-zz/Solutions/products/workstations/professional-desktop-gpus/rtx-pro-6000-max-q/workstation-datasheet-blackwell-rtx-pro-6000-max-q-nvidia-us-5349650-web.pdf — [không đọc được text] (search snippet: 96 GB GDDR7, 1,792 GB/s, 4000 AI TOPS).

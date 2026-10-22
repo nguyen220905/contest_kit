@@ -1,0 +1,192 @@
+# Nguồn tra cứu — round_06
+
+> Link do model trả về có thể sai hoặc bịa (nhất là link chỉ nằm trong văn bản). Mở bằng WebFetch trước khi dựa vào.
+
+### M1 = minimax — vòng 1 — 0 lượt search
+- [2508.11758] Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/abs/2508.11758
+- Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/html/2508.11758v2
+- Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/html/2508.11758
+- Can we Evaluate RAGs with Synthetic Data? — https://doi.org/10.48550/arxiv.2508.11758
+- Can We Evaluate RAGs with Synthetic Data? | Springer Nature Link — https://link.springer.com/chapter/10.1007/978-3-032-19102-1_11
+- Judging LLM-as-a-judge with MT-Bench and Chatbot Arena — https://arxiv.org/html/2306.05685v2
+- Length-Controlled AlpacaEval:A Simple Way to Debias Automatic Evaluators — https://arxiv.org/html/2404.04475v1
+- Explaining Length Bias in LLM-Based Preference Evaluations — https://aclanthology.org/2025.findings-emnlp.358.pdf
+- Evaluating Scoring Bias in LLM-as-a-Judge — https://arxiv.org/html/2506.22316v4
+- [2307.03025] Style Over Substance: Evaluation Biases for Large Language Models — https://ar5iv.labs.arxiv.org/html/2307.03025
+- [2503.05061] No Free Labels: Limitations of LLM-as-a-Judge Without Human Grounding — https://arxiv.org/abs/2503.05061
+- No Free Labels: Limitations of LLM-as-a-Judge Without Human Grounding — https://arxiv.org/html/2503.05061
+- Limitations of LLM-as-a-Judge Without Human Grounding — https://arxiv.org/html/2503.05061v4
+- No Free Labels: Limitations of LLM-as-a-Judge Without Human Grounding — https://arxiv.org/html/2503.05061v1
+- [2503.05061v1] No Free Labels: Limitations of LLM-as-a-Judge Without Human Grounding — https://arxiv.org/abs/2503.05061v1
+
+### M2 = openai — vòng 1 — 0 lượt search
+- Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/abs/2508.11758?utm_source=openai
+- NVIDIA A100 | NVIDIA — https://www.nvidia.com/en-us/data-center/a100/?ncid=no-ncid&utm_source=openai
+- ollama/docs/faq.mdx at main · ollama/ollama · GitHub — https://github.com/ollama/ollama/blob/main/docs/faq.mdx?utm_source=openai
+- Is the Exact Test Better than the Asymptotic Test for Testing Marginal Homogeneity in 2 × 2 Tables? - Park - 2002 - Biometrical Journal - Wiley Online Library — https://doi.org/10.1002/1521-4036%28200207%2944%3A5%3C571%3A%3AAID-BIMJ571%3E3.0.CO%3B2-P?utm_source=openai
+- No Free Labels: Limitations of LLM-as-a-Judge Without Human Grounding — https://arxiv.org/abs/2503.05061?utm_source=openai
+- H100 GPU | NVIDIA — https://www.nvidia.com/en-eu/data-center/h100/?utm_source=openai
+- (không tiêu đề) — https://arxiv.org/abs/2508.11758
+- (không tiêu đề) — https://arxiv.org/abs/2503.05061
+- (không tiêu đề) — https://www.nvidia.com/en-us/data-center/a100/
+- (không tiêu đề) — https://www.nvidia.com/en-eu/data-center/h100/
+- (không tiêu đề) — https://github.com/ollama/ollama/blob/main/docs/faq.mdx
+- (không tiêu đề) — https://github.com/ollama/ollama/blob/main/docs/template.mdx
+- (không tiêu đề) — https://doi.org/10.1002/1521-4036%28200207%2944%3A5%3C571%3A%3AAID-BIMJ571%3E3.0.CO%3B2-P
+
+### M3 = kimi — vòng 1 — 0 lượt search
+- IEEE CIS Technical Challenge on Domain-Specific ... — https://www.codabench.org/competitions/17954/
+- 2026 Technical Challenge on Domain-Specific Question ... — https://cis.ieee.org/activities/technical-activities/2026-technical-challenge-on-domain-specific-question-answering-with-llms
+- Overview – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/
+- Evaluation – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/evaluation/
+- leaderboard – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/leaderboard/
+- Is ChatGPT Good at Search? Investigating Large Language Models as Re-Ranking Agents — https://arxiv.org/html/2304.09542v3
+- sunnweiwei/RankGPT — https://github.com/sunnweiwei/RankGPT
+- Instruction Distillation Makes Large Language Models Efficient Zero-shot Rankers — https://doi.org/10.48550/arxiv.2311.01555
+- ChatGPT/GPT‑4 can directly rank search passages with simple prompts; distilled small models inherit that power. | Argmin AI — https://app.argminai.com/arxiv-dashboard/papers/2304.09542v3
+- RankVicuna: Zero-Shot Listwise Document Rerankingwith Open-Source Large Language Models — https://arxiv.org/abs/2309.15088
+- Judging LLM-as-a-judge with MT-Bench and Chatbot Arena — https://arxiv.org/abs/2306.05685v2
+- Verbosity Bias in Preference Labeling by Large Language Models — https://arxiv.org/abs/2310.10076
+- Judging the Judges: A Systematic Evaluation of Bias Mitigation Strategies in LLM-as-a-Judge Pipelines — https://arxiv.org/html/2604.23178
+- Justice or Prejudice? Quantifying Biases in LLM-as-a-Judge — https://arxiv.org/html/2410.02736v1
+- Comparing verbosity bias in Human and LLM based evaluators | Amanda Dsouza — https://amy12xx.github.io/verbosity-bias-llms.html
+
+### M5 = grok — vòng 1 — 0 lượt search
+- https://github.com/Tsinghua-dhy/EDC-2-RAG/blob/main/README.md — https://github.com/Tsinghua-dhy/EDC-2-RAG/blob/main/README.md
+- https://huggingface.co/papers/2508.11758 — https://huggingface.co/papers/2508.11758
+- https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/01_zero_shot/main.py — https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/01_zero_shot/main.py
+- https://www.cell.com/patterns/fulltext/S2666-3899(22)00146-5 — https://www.cell.com/patterns/fulltext/S2666-3899(22)00146-5
+- https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/main/config.json — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/main/config.json
+- https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/commit/fce5a930bc87f984392222f8231b31b6b6ff5e20 — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/commit/fce5a930bc87f984392222f8231b31b6b6ff5e20
+- https://scirate.com/arxiv/2503.05061 — https://scirate.com/arxiv/2503.05061
+- https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/join-the-challenge/ — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/join-the-challenge/
+- https://huggingface.co/unsloth/Olmo-3.1-32B-Instruct/blob/main/chat_template.jinja — https://huggingface.co/unsloth/Olmo-3.1-32B-Instruct/blob/main/chat_template.jinja
+- https://arxiv.org/abs/2508.11758 — https://arxiv.org/abs/2508.11758
+- https://www.github.com/LazyAGI/LazyLLM — https://www.github.com/LazyAGI/LazyLLM
+- https://parallel.ai/articles/deepsearchqa-benchmark — https://parallel.ai/articles/deepsearchqa-benchmark
+- https://github.com/python/cpython/raw/refs/heads/3.11/Doc/library/__main__.rst — https://github.com/python/cpython/raw/refs/heads/3.11/Doc/library/__main__.rst
+- https://github.com/codalab/codabench/issues/2250 — https://github.com/codalab/codabench/issues/2250
+- https://github.com/codalab/codabench/issues/2049 — https://github.com/codalab/codabench/issues/2049
+- https://docs.codabench.org/latest/Developers_and_Administrators/Robot-submissions/ — https://docs.codabench.org/latest/Developers_and_Administrators/Robot-submissions/
+- https://www.codabench.org/competitions/13527 — https://www.codabench.org/competitions/13527
+- https://www.alphaxiv.org/abs/2508.11758v2 — https://www.alphaxiv.org/abs/2508.11758v2
+- https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/evaluation/ — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/evaluation/
+- https://www.aimodels.fyi/models/huggingFace/olmo-3.1-32b-instruct-allenai — https://www.aimodels.fyi/models/huggingFace/olmo-3.1-32b-instruct-allenai
+- https://www.codabench.org/competitions/17954/ — https://www.codabench.org/competitions/17954/
+- https://scholar.google.com.co/citations?view_op=view_citation&hl=it&user=w0hYPqEAAAAJ&citation_for_view=w0hYPqEAAAAJ:qUcmZB5y_30C — https://scholar.google.com.co/citations?view_op=view_citation&hl=it&user=w0hYPqEAAAAJ&citation_for_view=w0hYPqEAAAAJ:qUcmZB5y_30C
+- https://artificialanalysis.ai/zh/models/olmo-3-1-32b-instruct — https://artificialanalysis.ai/zh/models/olmo-3-1-32b-instruct
+- https://github.com/microsoft/vscode-docs/raw/refs/heads/main/docs/python/python-tutorial.md — https://github.com/microsoft/vscode-docs/raw/refs/heads/main/docs/python/python-tutorial.md
+- https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/README.md — https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/README.md
+- https://github.com/docling-project/docling/tree/main/docling/chunking — https://github.com/docling-project/docling/tree/main/docling/chunking
+- https://github.com/docling-project/docling-core/blob/main/docling_core/transforms/chunker/doc_chunk.py — https://github.com/docling-project/docling-core/blob/main/docling_core/transforms/chunker/doc_chunk.py
+- https://arxiv.org/html/2607.04526v1 — https://arxiv.org/html/2607.04526v1
+- https://github.com/docling-project/docling-core/blob/main/docling_core/transforms/chunker/base.py — https://github.com/docling-project/docling-core/blob/main/docling_core/transforms/chunker/base.py
+- https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/02_rag/main.py — https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/02_rag/main.py
+- https://github.com/jucls/IEEE-CIS-DSQA-Starter-Kit/blob/main/02_rag/main.py — https://github.com/jucls/IEEE-CIS-DSQA-Starter-Kit/blob/main/02_rag/main.py
+- https://docs.vultr.com/models/allen-ai-olmo-31/olmo-3.1-32b-instruct/nvidia — https://docs.vultr.com/models/allen-ai-olmo-31/olmo-3.1-32b-instruct/nvidia
+- https://pmc.ncbi.nlm.nih.gov/articles/PMC11372993/ — https://pmc.ncbi.nlm.nih.gov/articles/PMC11372993/
+- https://github.com/jucls/IEEE-CIS-DSQA-Starter-Kit — https://github.com/jucls/IEEE-CIS-DSQA-Starter-Kit
+- https://github-wiki-see.page/m/codalab/codabench/wiki/Competition-Creation:-Form — https://github-wiki-see.page/m/codalab/codabench/wiki/Competition-Creation:-Form
+- https://www.alphaxiv.org/abs/2508.11758 — https://www.alphaxiv.org/abs/2508.11758
+- https://arxiv.org/pdf/2508.11758 — https://arxiv.org/pdf/2508.11758
+- https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/61593cf594616a3b3a49e493a8efd0cffbdd74c1/README.md — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/61593cf594616a3b3a49e493a8efd0cffbdd74c1/README.md
+- https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/requirements-participant.txt — https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/requirements-participant.txt
+- https://www.researchgate.net/publication/361538236_Codabench_Flexible_easy-to-use_and_reproducible_meta-benchmark_platform — https://www.researchgate.net/publication/361538236_Codabench_Flexible_easy-to-use_and_reproducible_meta-benchmark_platform
+- https://huggingface.co/allenai/Olmo-3-7B-Instruct/raw/main/chat_template.jinja — https://huggingface.co/allenai/Olmo-3-7B-Instruct/raw/main/chat_template.jinja
+- https://arxiv.org/html/2512.20159 — https://arxiv.org/html/2512.20159
+- https://gist.github.com/samuelpath/6e3289a50fd91a4cfdd55c93ef335a7f — https://gist.github.com/samuelpath/6e3289a50fd91a4cfdd55c93ef335a7f
+- https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/raw/main/chat_template.jinja — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/raw/main/chat_template.jinja
+- https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/2a97cd4ffbb9146e4a918d050522685b07eb5da2/README.md — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/blob/2a97cd4ffbb9146e4a918d050522685b07eb5da2/README.md
+- https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/discussions/2 — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/discussions/2
+- https://x.com/ollama/status/2000809811303178435 — https://x.com/ollama/status/2000809811303178435
+- https://www.codabench.org/competitions/17954/#/pages-tab — https://www.codabench.org/competitions/17954/#/pages-tab
+- https://www.researchgate.net/publication/381517952_Judging_the_Judges_Evaluating_Alignment_and_Vulnerabilities_in_LLMs-as-Judges — https://www.researchgate.net/publication/381517952_Judging_the_Judges_Evaluating_Alignment_and_Vulnerabilities_in_LLMs-as-Judges
+- https://github.com/NirDiamant/rag_techniques — https://github.com/NirDiamant/rag_techniques
+- https://www.semanticscholar.org/paper/No-Free-Labels%3A-Limitations-of-LLM-as-a-Judge-Human-Krumdick-Lovering/7ddde3055dd32c872277e2e068fef826c18bb692 — https://www.semanticscholar.org/paper/No-Free-Labels%3A-Limitations-of-LLM-as-a-Judge-Human-Krumdick-Lovering/7ddde3055dd32c872277e2e068fef826c18bb692
+- https://api.github.com/repos/jucls/IEEE-CIS-DSQA-Starter-Kit/contents/ — https://api.github.com/repos/jucls/IEEE-CIS-DSQA-Starter-Kit/contents/
+- https://developer.puter.com/ai/allenai/olmo-3.1-32b-instruct/ — https://developer.puter.com/ai/allenai/olmo-3.1-32b-instruct/
+- https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/02_rag/build.sh — https://raw.githubusercontent.com/jucls/IEEE-CIS-DSQA-Starter-Kit/main/02_rag/build.sh
+- https://github.com/langflow-ai/openrag — https://github.com/langflow-ai/openrag
+- https://github.com/docling-project/docling/blob/main/docs/concepts/chunking.md — https://github.com/docling-project/docling/blob/main/docs/concepts/chunking.md
+- https://pricepertoken.com/compare/allenai-olmo-3-7b-instruct-vs-allenai-olmo-3.1-32b-instruct — https://pricepertoken.com/compare/allenai-olmo-3-7b-instruct-vs-allenai-olmo-3.1-32b-instruct
+- https://arxiv.org/abs/2406.12624 — https://arxiv.org/abs/2406.12624
+- https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html — https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html
+- https://cis.ieee.org/activities/technical-activities/2026-technical-challenge-on-domain-specific-question-answering-with-llms — https://cis.ieee.org/activities/technical-activities/2026-technical-challenge-on-domain-specific-question-answering-with-llms
+- https://www.alphaxiv.org/@michael-krumdick — https://www.alphaxiv.org/@michael-krumdick
+- https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-DPO/blob/fc84a4f699916fcf585aa54371f47897fa934d5c/chat_template.jinja — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct-DPO/blob/fc84a4f699916fcf585aa54371f47897fa934d5c/chat_template.jinja
+- https://github.com/docling-project/docling — https://github.com/docling-project/docling
+- https://raw.githubusercontent.com/dabeaz-course/practical-python/master/Notes/01_Introduction/02_Hello_world.md — https://raw.githubusercontent.com/dabeaz-course/practical-python/master/Notes/01_Introduction/02_Hello_world.md
+- https://runebook.dev/en/docs/pytorch/generated/torch.nn.attention.sdpa_kernel — https://runebook.dev/en/docs/pytorch/generated/torch.nn.attention.sdpa_kernel
+- https://www.codabench.org/competitions/7351/ — https://www.codabench.org/competitions/7351/
+- https://docs.codabench.org/latest/Organizers/Benchmark_Creation/Competition-Bundle-Structure/ — https://docs.codabench.org/latest/Organizers/Benchmark_Creation/Competition-Bundle-Structure/
+- https://github.com/codalab/codabench/issues/2359 — https://github.com/codalab/codabench/issues/2359
+- https://raw.githubusercontent.com/pywire/pywire-core/e1da0398adeac6cc66bf9fa6a458e6bb6a5db11e/src/pywire/cli/main.py — https://raw.githubusercontent.com/pywire/pywire-core/e1da0398adeac6cc66bf9fa6a458e6bb6a5db11e/src/pywire/cli/main.py
+- https://raw.githubusercontent.com/vedikaa06/pacman/main/main.py — https://raw.githubusercontent.com/vedikaa06/pacman/main/main.py
+- https://cleverx.com/blog/how-to-qa-expert-data-for-ai-inter-rater-reliability-gold-sets-quality-control/ — https://cleverx.com/blog/how-to-qa-expert-data-for-ai-inter-rater-reliability-gold-sets-quality-control/
+- https://www.datocms-assets.com/64837/1765558567-olmo_3_technical_report-4.pdf — https://www.datocms-assets.com/64837/1765558567-olmo_3_technical_report-4.pdf
+- https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/ — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/
+- https://www.youtube.com/watch?v=X8VBSoOE5is — https://www.youtube.com/watch?v=X8VBSoOE5is
+- https://scispace.com/papers/judging-the-judges-evaluating-alignment-and-vulnerabilities-3fwrebwg8b — https://scispace.com/papers/judging-the-judges-evaluating-alignment-and-vulnerabilities-3fwrebwg8b
+- https://www.codabench.org/competitions/16065/ — https://www.codabench.org/competitions/16065/
+- https://docs.pytorch.org/tutorials/intermediate/scaled_dot_product_attention_tutorial.html — https://docs.pytorch.org/tutorials/intermediate/scaled_dot_product_attention_tutorial.html
+- https://huggingface.co/allenai/Olmo-3.1-32B-Instruct — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct
+- https://github.com/allenai/open-instruct/olmo3/ — https://github.com/allenai/open-instruct/olmo3/
+- (không tiêu đề) — https://arxiv.org/abs/2503.05061
+
+### M6 = gemini — vòng 1 — 0 lượt search
+- ugr.es — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQESTadT7Cu8YOy-FIuDXBwfblXKRGN3pr48XcycsUvoKLvtUwWbKR3n86jjnyMrM8ia044y25F5iPoKW5PsDQk87bfX0TnW_OiOaMYmicGYRK1PBiSivLH0CQlEGz63Yto4xkKP0KzysTROkw-OU21u6K2MH9r0MBBjr8XH2N6etVez31AwWOkVdgHNEXciFaCVk5SkYQ==
+- arxiv.org — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFpjykINwyWt_85siQsEZdy6XiO1bnyWpQ0kqKUopjSwJe4Y61gDbhvDk3W6WXpUbf7hETcTkhdfBFhM6nXSja7kIigixB6NOD9xVwJct_n_Gk4HrEd0vqJMWY=
+- github.com — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHLCCga6PyjRyPcR8tREBqQ2XNs9PGjyoxU3mq53RdXgeT-kxlHdZqeTf2kYMpDoMsPrQbULOKLa2_X9nC5cn66w03FektSK4L62vyK5xbR0KJs6LT30-tWsp_lzCo5ZcINvYUJKwmszmQercaiisjUhE0e5ymm
+- huggingface.co — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFtLpn5hwS0lYsA4G_4DnQBFbBqSNr-fyx1OJqna-Bg7gK6N_CpGhwLnH7Gq5ROw1-dL8yeZ-eDz2hh2qjWl51uTAdlxw01kaeJo5WQlKFPLsvgHWEb_RnWLvRPToHhfl_pAe-ECDpnQ-iGuZ3odlw=
+- arxiv.org — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQE5go6fU4m7p9h2R1lAVj03fwr4lUe7JGXJXQiyTFqjjRHZsq3WiPFz71Sglgpejt9VwlLOc0JujDzH3dtKgEHnUKUNVETCHZQY9-tRV4AlVpKHWNhBKb5ZHGg=
+- huggingface.co — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHgcQAgqzEPiRjpIIvJUReZr1Z3YmSpkB2HDUjFYqMPDtumHADvpCQcqnCN8F1fJr_or-FhxreWppOa-KFRpqoFe2E31Bzk2h2RiASOQ2MnHeQvACG_hAV0jdBhrWCE72CxtN58vDg5TGt6vF7GB3sYLEBYEkl3sYWZkG9oBDn6BOFgnyI6Yf09ipGz888Tv_7c-i91hG7caWL8T4XZR9tu0bymq6Y5uCcg9ISi2a9ibWUo
+- huggingface.co — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQE6ZJym0BfB3fQdKK_sjvDhDiYms1LBMzGsC7WZ6iIJQs37DK0J7ti7kwk9rJ6Nge75uko7HgZ1D_4HM16ySzkMaUeMnKeE9rXdc96V4261ypOcbMh81laWkPp3Pew_P8GcKEsI1DcMvZFR4BFl8JX4mqW4fpjSrHeJeZJy4g==
+- arxiv.org — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGz_q_NQP0MrPESYXtEVOJ0QLL8-O-fK3rSQzno9dsFkwfnChW3qh7OkzeqqPuReQSzXWyYUbgKg8D9_MufNnFpHoTjR2tIIa15Dw92yMgQGKjV-6V-Bm5PRMFyMX9j5Qr0eqUhvZWSlFoHv20raVU=
+- semanticscholar.org — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQF_smlsuUpBLMaKlWgRjmoJYyLBZ_mJYC3VNcwLYM_ir6_lbho6IzQtrwaTaYrzjCL-23ZZaQoERWdeAvWH7VQ65Se7zx21zSTZtKHhQW7tjOxC31UMHM6Mbbv46M7r73TL8ZYU-fyos8XA12bG1w0rRxjN26Md6QH2XYgGxcefUtoOk5B2kRBTzH2AOZvvE1JmHH5YX8s6uW0eySEV21Kd-WE4rhvBONMeh_Axn2beuZPU_ssUBYwfTYzFc7_reMCqVvLwTF7CsQI326Gz831sAQ==
+- arxiv.org — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHSCLk0NbgEqqFZiH0xivfo76uXDaTtlgyYS3z-eeIrBltdxM1BOXosi8_NlZ2nec15P1Kv5Cb6mK0JFLNAY5tLZ-JzxXlS71rlBgTkUDXG2XiyiMlJuZaxutE=
+- alphaxiv.org — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHSgGg84iOeCQo3ndUBoJp1tiuqmqaWlpJWot6EIrzb1eaoe2gkTqiQrX1Hxkb9U2198_Ka3Z-1_wtN6aSi4Poy9L3Dsx4AJHlSfPQweJXMVAJSYogKcFCpgow_9IDQgzm55GAgvY31
+- huggingface.co — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG1M8sN2Dq-XQYHEzSOKwxnaypdd6SteyNdd14cNvwfO_xmNZS4Lv52Q0U8Zql5UrSXpycGqQOy5sY-HVaj3h3Ec47JQmROpd5_G-HibtwearRyediFCYXafOzK-J3D7Vggnm1id7G0cbagzJw=
+- github.com — https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH12F0LHA6bGPhGUzVMImrwRLgPmPHgrx5AUyD_tXL9ETCYd50xLot1wuN49Aq8x3jAacGex5vQgVHGpi-sSlaNJFGIXE1gJ3EcDX_Q_Rpsqk874wCTEm906gLo8nU9a4uNRcWBWGVISKbaHXqpfuJL0J94p0jfnmvcZ67PJ2A=
+- (không tiêu đề) — https://www.codabench.org/competitions/17954/
+- (không tiêu đề) — https://arxiv.org/abs/2508.11758
+- (không tiêu đề) — https://github.com/docling-project/docling
+- (không tiêu đề) — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct
+- (không tiêu đề) — https://arxiv.org/abs/2503.05061
+- (không tiêu đề) — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/resolve/main/tokenizer_config.json
+- (không tiêu đề) — https://huggingface.co/allenai/Olmo-3-7B-Instruct
+- (không tiêu đề) — https://arxiv.org/abs/2406.12624
+- (không tiêu đề) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/
+
+### M7 = qwen — vòng 1 — 0 lượt search
+- IEEE CIS Technical Challenge on Domain-Specific ... — https://www.codabench.org/competitions/17954/
+- Overview – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/
+- 2026 Technical Challenge on Domain-Specific Question ... — https://cis.ieee.org/activities/technical-activities/2026-technical-challenge-on-domain-specific-question-answering-with-llms
+- Join the Challenge – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/join-the-challenge/
+- Official Rules — https://cis.taskforce.ieee.org/gpais/wp-content/uploads/sites/6/2026/09/IEEE-CIS-Technical-Challenge-on-Domain-Specific-Question-Answering-with-LLMs-Contest-Rules.pdf
+- (không tiêu đề) — https://arxiv.org/pdf/2512.13961
+- Readme — https://huggingface.co/allenai/Olmo-3.1-32B-Instruct/resolve/refs%2Fpr%2F2/README.md?download=true
+- configs/recipes/olmo3/inference/32b_infer.yaml — https://github.com/oumi-ai/oumi/blob/main/configs/recipes/olmo3/inference/32b_infer.yaml
+- allenai/Olmo-3-1125-32B · Hugging Face — https://huggingface.co/allenai/Olmo-3-1125-32B
+- Olmo 3 & Olmo Hybrid - Open Instruct — https://allenai.github.io/open-instruct/olmo3/
+- [2508.11758] Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/abs/2508.11758
+- Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/html/2508.11758
+- Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/html/2508.11758v2
+- Can we Evaluate RAGs with Synthetic Data? — https://doi.org/10.48550/arxiv.2508.11758
+- Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/pdf/2508.11758
+
+### M8 = glm — vòng 1 — 0 lượt search
+- Official Rules — https://cis.taskforce.ieee.org/gpais/wp-content/uploads/sites/6/2026/09/IEEE-CIS-Technical-Challenge-on-Domain-Specific-Question-Answering-with-LLMs-Contest-Rules.pdf
+- IEEE CIS Technical Challenge on Domain-Specific ... — https://www.codabench.org/competitions/17954/
+- Join the Challenge – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/join-the-challenge/
+- 2026 Technical Challenge on Domain-Specific Question ... — https://cis.ieee.org/activities/technical-activities/2026-technical-challenge-on-domain-specific-question-answering-with-llms
+- Evaluation – Computational Intelligence for General-Purpose AI Systems (GPAIS) — https://cis.taskforce.ieee.org/gpais/tc-domain-qa-llms/evaluation/
+- [2508.11758] Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/abs/2508.11758
+- Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/html/2508.11758
+- Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/html/2508.11758v2
+- Can we Evaluate RAGs with Synthetic Data? — https://arxiv.org/pdf/2508.11758
+- Can we Evaluate RAGs with Synthetic Data? — https://doi.org/10.48550/arxiv.2508.11758
+- GPU support - Docling — https://docling-project.github.io/docling/usage/gpu/
+- GPU Acceleration - Docling — https://www.mintlify.com/docling-project/docling/advanced/gpu-acceleration
+- Layout Model is slow on all CUDA GPUs — https://github.com/docling-project/docling/issues/1364
+- GPU Performance Optimization & Benchmark · docling-project/docling · Discussion #3442 · GitHub — https://github.com/docling-project/docling/discussions/3442
+- perf(tableformer): autoregressive decode bottlenecked by per-token Python overhead (GPU mostly idle) — https://github.com/docling-project/docling-ibm-models/issues/161

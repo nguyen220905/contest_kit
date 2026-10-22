@@ -11,11 +11,12 @@
 | — | — | — | — | chưa nộp; mốc BTC: zero-shot 29.05 / 733 s, RAG 57.14 / 2080 s |
 
 ## Đang làm
-- Việc: Stage 1 (harness) của `docs/STAGES.md` v2 — người dùng duyệt 22/10; council đủ 8 model đang chấm lại v2
-- Sẽ sửa: `eval/dev_shim.py`, `eval/run_pipeline.py`, `eval/compare_runs.py` (mới)
-- Trạng thái: worker đang code
+- Việc: Stage 1 của `docs/STAGES.md` v3 — harness xong (commit `057ff50`); còn lượt bf16 (đang chạy, chậm do GPU dùng chung) + bài nộp D1 `02-safe`
+- Trạng thái: chờ lượt bf16; D1 chưa bắt đầu
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
+- 2026-10-22 — Council round_06 (đủ 8 model) chấm STAGES v2: TB 6.8/10, trung vị 7, "sửa nhỏ rồi làm" → STAGES v3 (D1 nộp sớm, Stage 5 hoãn, Stage 3b thêm oracle-chunk/evidence-last)
+- 2026-10-22 — Stage 1 harness: 01_zero_shot 7B 4-bit sample25 ×2 → local tất định (0/25 khác chữ), token p50/p95 597/1738, 77–89 s/câu
 - 2026-10-22 — Council round_02 chấm plan P2+P3: chỉ DeepSeek trả lời (key OpenRouter HẾT HẠN, 401) → 5/10 và 6/10, "sửa nhỏ rồi làm"; STAGES.md v2
 - 2026-10-22 — Đọc Discord BTC → `docs/DISCORD.md`: được bundle model bất kỳ (kể cả LLM khác), judge tất định, private 2h là giới hạn mềm, corpus không công bố kích thước
 - 2026-10-15 — P1: `.venv` khớp server (torch 2.8.0+cu128 thấy sm_120, transformers 5.17.0, pip check sạch; bỏ triton vì chỉ có Linux). Smoke test Olmo-3-7B: 4bit 9 tok/s · 4.9 GiB; bf16 11 tok/s · 13.6 GiB; 8bit 2.8 tok/s
@@ -42,3 +43,5 @@
 - Một lượt nộp = 1 ngày: luôn chạy smoke test + kiểm zip giải nén < 900 MB trước khi nộp.
 - bnb 8-bit (LLM.int8) rất chậm (2.8 tok/s) → dev dùng 4-bit. Tốc độ/bộ nhớ của 7B (MHA 32/32) KHÔNG suy ra được 32B (GQA 40/8).
 - `triton` không có wheel Windows → venv local thiếu triton; kiểm lại trên Linux (H100 thuê) trước khi nộp.
+- GPU local dùng chung với dự án khác (project_r2ai, UNDERWATER-IMAGING, project_pnpl) → thời gian local nhiễu; KHÔNG kill tiến trình của dự án khác.
+- Olmo-32B: 48/64 lớp sliding 4096 → fragment đặt đầu context dài bị 48 lớp "không thấy" khi sinh (giả thuyết D2 evidence-last).

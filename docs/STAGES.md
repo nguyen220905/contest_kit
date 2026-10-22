@@ -1,163 +1,134 @@
-# STAGES — P2 + P3: eval harness + corpus dev (nguồn mở) — v2 sau council round_02
+# STAGES — P2 + P3: eval harness + corpus dev — v3 sau council round_06 (đủ 8 model)
 > /orchestrate tạo và cập nhật file này. Hook Stop đọc dòng "Trạng thái" và mục "Tiêu chí tổng" để quyết định vòng lặp chạy tiếp hay dừng.
-> Chỉ criteria-checker đánh [x], kèm bằng chứng. Vòng trước: chưa có. Góp ý: `docs/council/round_02/SYNTHESIS.md` (chỉ DeepSeek trả lời — key OpenRouter hết hạn).
+> Chỉ criteria-checker đánh [x], kèm bằng chứng. Góp ý: `docs/council/round_06/SYNTHESIS.md` (8 model, 6.8/10 trung bình, "sửa nhỏ rồi làm"),
+> `docs/council/round_02/SYNTHESIS.md` (v1, chỉ DeepSeek).
 
 Trạng thái: lập kế hoạch
 <!-- Các giá trị: lập kế hoạch · đang chạy · chờ người dùng — <câu hỏi> · dừng — <lý do> · xong -->
 
 ## Bối cảnh (2026-10-22)
 - Điểm hiện tại: chưa nộp. LB: top 69.05, ngưỡng top 20 = 59.05; mốc BTC zero-shot 29.05 / 733 s, RAG 57.14 / 2080 s.
-- Mục tiêu: có một thước đo local **tin được** để chọn thay đổi ở P4–P6 bằng số, không phí lượt nộp (1 bài/ngày, server không trả output).
-- Ràng buộc: dev local Olmo-3-7B-Instruct 4-bit (9 tok/s, 4.9 GiB, RTX 5060 Ti 16 GB). bf16 (13.6 GiB) chỉ dùng cho 01_zero_shot:
-  với 02_rag (context ~12k) KV cache ~3 GiB (24 lớp sliding 4096 + 8 lớp full) → vượt 16 GB. Olmo-32B chỉ chạy được trên H100 thuê.
-  Dữ liệu thêm CHỈ từ nguồn mở. Judge chính thức ẩn nhưng tất định, chấm nhị phân, tham chiếu "deliberately concise".
-- Đã loại (đừng lặp): nộp lại 01/02 nguyên bản; BGE-M3 / bge-reranker-v2-m3 (> 1 GB).
-- Giả thuyết kích thước corpus thật (CHƯA kiểm): 02_rag tốn hơn zero-shot 2080 − 733 ≈ 1350 s; trừ prefill 10k token × 50 câu (~100–200 s)
-  → ~1100 s parse Docling + embed MiniLM CPU → nếu Docling ~2–4 trang/s thì corpus ≈ 2.5–4.5k trang ≈ 150–400 PDF. Chỉ kiểm được bằng
-  tốc độ Docling thật trên H100 (P1b).
+- Mục tiêu: thước đo local đủ tin để chọn thay đổi; **LB là thước đo chính** (judge ẩn tất định) → nộp sớm, mỗi ngày 1 bài có đối chứng.
+- Đã đo (Stage 1): Olmo-3-7B 4-bit, 01_zero_shot trên sample25: **local tất định** (2 lượt, 0/25 câu khác chữ); token sinh p50/p95/max
+  597/1738/1984; 77–89 s/câu (lệch ~15% giữa 2 lượt; GPU dùng chung với tiến trình dự án khác → thời gian local chỉ để tham khảo).
+- Olmo-3.1-32B (config): 48/64 lớp sliding-window 4096 + 16 lớp full. 02_rag đặt fragment tốt nhất ĐẦU context 10k (`02_rag/main.py:124-141`)
+  → fragment đó nằm ngoài cửa sổ của 48 lớp sliding khi sinh. 02_rag không lưu doc/page của chunk (`main.py:98`).
+- Điểm số: balanced = mean(acc_DONES, acc_AI). Public 50 câu (15/35): 1 câu = 3.33 hoặc 1.43 điểm. Sample25 (10 DONES/15 AI): 1 câu DONES = 5 điểm, AI = 3.33.
+- Đã loại (đừng lặp): nộp lại 01/02 nguyên bản; BGE-M3 / bge-reranker-v2-m3 (> 1 GB); "chạy lại local = nhiễu" (local tất định);
+  dò số trang corpus bằng cách cố tình gây lỗi (rủi ro bị loại); Ollama làm judge hay proxy 32B.
 
 ## Quyền tự quyết & ngân sách
 - Tự điều chỉnh stage chưa làm: có
 - Tự đổi hướng (khi chạm dấu hiệu hướng sai): không — hỏi người dùng
 - Tối đa 3 lượt sửa / stage · tối đa 40 lượt cho cả vòng lặp
-- API: J1 + sinh câu hỏi = DeepSeek gọi thẳng (còn credit). J2 tuỳ chọn: OpenRouter khi key còn hạn (**key hết hạn 22/10 — người dùng cần thay**),
-  nếu không thì DeepSeek với prompt/temperature khác.
+- API: judge + sinh câu hỏi = DeepSeek gọi thẳng. OpenRouter (key mới 22/10) cho judge phụ / hội đồng.
+- Nộp bài: người dùng tự upload zip lên Codabench (1 lượt/ngày); phiên chính chuẩn bị zip + smoke test.
 
 ## Thiết kế chung
-- Bài nộp là thư mục có `main.py` (giống zip). Harness import đúng `main.py` đó và gọi `answer()` tuần tự trong 1 process như server.
-  Không sửa code bài nộp để chạy local: `eval/dev_shim.py` vá `AutoModelForCausalLM.from_pretrained` khi `DSQA_DEV_QUANT=4bit`
-  (chèn `BitsAndBytesConfig`) và harness truyền `model_id=allenai/Olmo-3-7B-Instruct`. Trên server không có shim.
-- Hook tuỳ chọn cho chẩn đoán (server bỏ qua): `main.py` có thể có `retrieve(question, corpus_dir) -> list[dict(doc, page, score)]`
-  (đo retrieval KHÔNG cần LLM → vòng lặp nhanh) và biến `LAST_DEBUG` (tài liệu đã dùng cho câu vừa trả lời).
-- Định dạng split (`data/splits/*.jsonl`): `id, domain (DONES|AI Papers), question_type, question, reference_short, reference_long,
-  evidence: [{doc_id, page, quote}], flags: {calc, false_premise, names_paper, closed_book_easy}, source (sample|synthetic|human)`.
-- **Quy tắc dùng split (bắt buộc):** dev/holdout tổng hợp chỉ dùng để chọn **retrieval / chunking / thời gian**. Thay đổi ở **generator**
-  (prompt, format, PoT…) phải thắng trên sample25 VÀ không thua trên holdout tổng hợp, rồi xác nhận bằng LB.
-  Lý do: câu tổng hợp xếp hạng generator gần như ngẫu nhiên (van Elburg et al., arXiv 2508.11758, τ≈0).
-- **Cách ly sample25:** tài liệu gold của 25 câu mẫu KHÔNG được dùng sinh câu dev; few-shot sinh câu dùng template phong cách trừu tượng,
-  không dán nguyên văn câu/đáp án mẫu.
+- Bài nộp là thư mục có `main.py` (giống zip). Harness `eval/run_pipeline.py` import đúng `main.py` đó, gọi `answer()` tuần tự 1 process.
+  Local: `eval/dev_shim.py` chèn bnb 4-bit + `model_id=allenai/Olmo-3-7B-Instruct`. Server không có shim.
+- Hook chẩn đoán tuỳ chọn (server bỏ qua): `retrieve(question, corpus_dir) -> list[dict(doc, page, score)]` và `LAST_DEBUG`
+  (doc, page, token offset của từng fragment trong prompt) → đo `quote_recall@k` và `in_window_hit` (evidence có nằm trong 4096 token cuối không).
+- Định dạng split (`data/splits/*.jsonl`): `id, domain, question_type, question, reference_short, reference_long,
+  evidence: [{doc_id, page, quote}], flags: {calc, false_premise, names_paper, outside_doc, closed_book}, source`.
+- **Quy tắc dùng split:** synthetic (nếu có) chỉ để chọn retrieval/chunking/thời gian; thay đổi generator (prompt, format, PoT…) phải
+  thắng trên sample25 rồi xác nhận bằng LB (van Elburg et al., arXiv 2508.11758).
+- **Ngưỡng quyết định:** local sample25 — đề cử lên LB khi **thắng ròng ≥ 3 câu và thua ≤ 1** (cùng retrieval, cùng judge);
+  LB — coi là best mới chỉ khi **Δ ≥ max(2.86, |D1 − 57.14|, nhiễu 32B đo trên GPU thuê)**.
 - Mọi I/O `encoding="utf-8"`; mỗi lượt chạy = 1 process mới.
-- Git: `data/` đang bị ignore → đổi thành `data/*` + `!data/splits/` + `!data/manifests/` (PDF không commit, manifest + split commit).
-  Sau Stage 6: bật `eval/**` trong `.claude/protected_paths.txt` (data/raw/** và data/splits/** đã bảo vệ sẵn).
+- Git: `data/` đang bị ignore → đổi thành `data/*` + `!data/splits/` + `!data/manifests/`. Ghi `data/splits/` lần đầu cần người dùng
+  tạm bỏ dòng bảo vệ (hook chặn). Sau Stage 2: bật `eval/**` trong `.claude/protected_paths.txt`.
 
 ## Tiêu chí tổng
-- [ ] `.venv\Scripts\python eval/evaluate.py --submission starter_kit/02_rag --split holdout --corpus data/raw/corpus/C200 --run results/exp002_rag_c200`
-      → `results/exp002_rag_c200/predictions.csv` + `metrics.json` có: domain-balanced acc, acc theo domain và theo question_type,
-      số lỗi, thời gian (load, index, mỗi câu p50/p95, tổng, dự phóng public 50 câu / private 100 câu), số token sinh p50/p95, doc-hit@1/5/10.
-- [ ] J1 qua hiệu chỉnh (Stage 2); J2 (nếu có) Cohen's kappa với J1 ≥ 0.8 trên 25 câu mẫu.
-- [ ] `data/manifests/corpus_C{50,200}.csv` + `data/splits/{dev,holdout,sample25}.jsonl` đã commit; holdout tách theo TÀI LIỆU với dev;
-      `doc(dev) ∩ doc(sample25) = ∅`.
-- [ ] Baseline đo xong: 01_zero_shot và 02_rag trên dev/holdout/sample25 (7B 4-bit); ngưỡng nhiễu ghi vào AGENTS.md "Nhiễu đã đo";
-      exp-001/exp-002 trong `docs/EXPERIMENTS.md`; bảng theo dõi tương quan local ↔ LB lập sẵn trong EXPERIMENTS.md.
+- [ ] `.venv\Scripts\python eval/evaluate.py --submission <02 instrumented> --split sample25 --corpus data/raw/corpus/gold(+C50) --run results/<run>`
+      → `predictions.csv` + `metrics.json` có: **balanced = mean(acc_D, acc_A)**, acc theo domain và question_type, số lỗi, thời gian
+      (overhead, p50/p95, dự phóng public/private), token sinh p50/p95, `quote_recall@k`, `in_window_hit`.
+- [ ] Judge J1 qua 4 test hiệu chỉnh (Stage 2).
+- [ ] D1 đã nộp, có điểm + runtime trên LB; kết quả ghi `docs/EXPERIMENTS.md`.
+- [ ] Stage 3b xong: oracle-chunk + evidence-first/last + closed-book theo domain → quyết định ưu tiên retrieval hay generator, có số.
 
 ## Dấu hiệu hướng sai (viết TRƯỚC khi làm)
 - Judge J1 không qua hiệu chỉnh sau 2 lần sửa rubric → đổi model judge / cách chấm (hỏi người dùng).
-- 02_rag KHÔNG hơn 01_zero_shot trên sample25 với corpus gold (Stage 3b; LB: +28 điểm) → bug harness/corpus.
-- ≥ 6/25 câu mẫu không tìm được tài liệu nguồn mở → corpus local không tái tạo được đề; dựa nhiều hơn vào câu tổng hợp.
-- Tỉ lệ closed-book đúng của câu tổng hợp lệch > 15 điểm % so với tỉ lệ đó trên sample25 (cùng model, cùng quy trình) → câu không giống đề.
-- Thời gian index/trang local > 4× số liệu benchmark PyMuPDF/Docling → lỗi môi trường, dừng đo thời gian.
+- 02 KHÔNG hơn 01 trên sample25 với corpus gold (LB: +28 điểm) → bug harness/corpus.
+- ≥ 6/25 câu mẫu không tìm được tài liệu nguồn mở → corpus local không tái tạo được đề.
+- |D1 − 57.14| ≥ 2.86 → nhiễu LB lớn, delta 1 bài nộp không đọc được → dựa nhiều hơn vào phiên thuê 32B.
 - Cùng một lỗi lặp lại 2 lần trong một stage.
 
-## Stage 1: Harness chạy bài — đang làm (người dùng duyệt 22/10)
-- Mục tiêu: chạy bất kỳ thư mục bài nộp nào trên một split, đúng như server (1 process, tuần tự, offline, đo thời gian), ghi predictions.
-- File dự kiến: `eval/run_pipeline.py`, `eval/dev_shim.py`
-- Tiêu chí (lệnh → kết quả mong đợi):
-  - [ ] `eval/run_pipeline.py --submission starter_kit/01_zero_shot --split sample25 --run results/exp001_zs` → 25 dòng, mọi answer là str,
-        có thời gian load + từng câu, VRAM đỉnh, `n_new_tokens` + p50/p95 token sinh
-  - [ ] Chạy với `HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1` không lỗi (giống server không internet)
-  - [ ] Bài giả ném exception ở câu 3 → harness ghi lỗi câu 3, chạy tiếp, answer rỗng cho câu đó
-  - [ ] `--budget-s 3600` báo "VƯỢT GIỚI HẠN" khi tổng thời gian dự phóng vượt; báo cả dự phóng private (100 câu, 7200 s mềm)
-  - [ ] Lệch do shim: 01_zero_shot trên sample25 chạy 4-bit 2 lần (đếm câu khác chữ = nhiễu) + bf16 1 lần (đếm verdict lật sau Stage 2) → ghi "lệch shim"
-- Rủi ro: starter kit load bf16 `device_map="cuda"` → shim phải chèn quant mà không đổi code; Docling/embedder 02_rag cần tải model về như `build.sh` (bản Windows).
-  Olmo-7B sinh dài (smoke test: cả 3 câu chạm trần 256 token); trần 2048 ở 9 tok/s = 227 s/câu → lên lịch Stage 3b/6 theo token đo được.
-- Bằng chứng:
-
-## Stage 2: Judge + metrics + hiệu chỉnh — chưa làm
-- Mục tiêu: chấm nhị phân giống judge ẩn nhất có thể, tất định, có số đo độ tin cậy.
-- File dự kiến: `eval/judge.py`, `eval/evaluate.py` (= run_pipeline + judge + metrics; `--judge-only` để chấm lại), `eval/calibrate_judge.py`
-- Thiết kế: Input: câu hỏi + `reference_short` + câu trả lời. Rubric: đúng nếu chứa đúng sự kiện/số chính của tham chiếu (làm tròn hợp lý,
-  đơn vị tương đương), không mâu thuẫn; câu tiền đề sai được tính đúng khi bác tiền đề như tham chiếu. temperature 0, output JSON {verdict, reason},
-  cache theo hash → chấm lại không tốn tiền. `reference_short` của 25 câu mẫu: LLM rút gọn từ gold dài + người duyệt.
+## Stage 1: Harness chạy bài + bài nộp D1 — đang làm (người dùng duyệt 22/10)
+- Mục tiêu: chạy bài như server (1 process, tuần tự, offline, đo thời gian); đóng gói + nộp D1 làm bài đối chứng.
+- File: `eval/run_pipeline.py`, `eval/dev_shim.py`, `eval/compare_runs.py` (đã có, commit `057ff50`); `submissions/d1_02_safe/` + script build zip.
 - Tiêu chí:
-  - [ ] Hiệu chỉnh J1 trên 25 câu mẫu: gold diễn đạt lại → đúng ≥ 24/25; gold bị đổi số/đơn vị/thực thể (2 biến thể/câu) → bác ≥ 90%;
-        bản chỉ 1 câu trả lời thẳng → đúng ≥ 23/25; câu trả lời dài lạc đề → bác 25/25; câu né/mơ hồ → bác ≥ 90%;
-        câu dài có đáp án đúng + 1 chi tiết mâu thuẫn → bác ≥ 80%
-  - [ ] Cùng câu trả lời chấm với `reference_long` vs `reference_short` → verdict lật ≤ 10%
-  - [ ] J2 (nếu có): Cohen's kappa với J1 ≥ 0.8; mọi câu bất đồng ghi vào `results/<run>/judge_disagreements.csv`
-  - [ ] `eval/evaluate.py --run results/exp001_zs --judge-only` → metrics.json đủ trường như Tiêu chí tổng
-- Rủi ro: judge ẩn có thể khác hẳn (model, rubric) → số local chỉ dùng để SO SÁNH TƯƠNG ĐỐI, không dự đoán điểm LB tuyệt đối.
-- Bằng chứng:
+  - [x] 01_zero_shot sample25 → 25 dòng, answer là str, thời gian + VRAM + token (exp001_zs_4bit_a/b)
+  - [x] Chạy `--offline` không lỗi
+  - [x] Bài giả ném exception / trả non-str → ghi lỗi, chạy tiếp
+  - [x] Dự phóng public/private + cảnh báo vượt giới hạn có trong run_info.json
+  - [x] Local tất định: 2 lượt 4-bit 0/25 câu khác chữ
+  - [ ] Lệch shim: lượt bf16 (`results/exp001_zs_bf16`) so với 4-bit — số câu khác chữ; verdict lật đo sau Stage 2
+  - [ ] D1 `02-safe` = 02 nguyên bản + chỉ vá không đổi hành vi trên corpus phẳng: tìm PDF đệ quy, không phân biệt hoa thường;
+        try/except từng câu trả chuỗi fallback, KHÔNG load lại model khi lỗi (cache cả trạng thái lỗi); giữ prompt, 10k, 2048, greedy
+  - [ ] Zip D1: `main.py` ở gốc, giải nén ≤ 1 GB, không chứa `eval/`/`dev_shim`; chạy qua harness `--offline` trên vài PDF thật → mọi câu trả str
+- Bằng chứng: exp001_zs_4bit_a/b (run_info.json), compare_runs 0/25.
+
+## Stage 2: Judge + metrics (gọn) — chưa làm
+- File dự kiến: `eval/judge.py`, `eval/evaluate.py` (= run_pipeline + judge + metrics; `--judge-only`), `eval/calibrate_judge.py`
+- Thiết kế: J1 = DeepSeek, temperature 0, JSON {verdict, reason}, cache theo hash. Input: câu hỏi + `reference_short` + câu trả lời.
+  `reference_short` = atomic claim (giá trị + đơn vị + thực thể + cách xử lý tiền đề sai) + cờ `outside_doc / false_premise / closed_book`;
+  LLM rút gọn từ gold dài + người duyệt, giới hạn 2 giờ.
+- Tiêu chí (4 test hiệu chỉnh trên sample25):
+  - [ ] gold diễn đạt lại → đúng ≥ 24/25
+  - [ ] gold đổi số/đơn vị/thực thể → bác ≥ 90%
+  - [ ] trả lời lạc đề → bác 25/25
+  - [ ] thiếu 1 vế của câu nhiều vế → bác ≥ 80%
+  - [ ] Báo cáo (không làm cổng): lật verdict khi dùng `reference_long` vs `reference_short`; bất đồng với judge phụ nếu chạy
+- Rủi ro: judge ẩn khác hẳn → số local chỉ để so sánh tương đối.
 
 ## Stage 3: Tài liệu nguồn cho 25 câu mẫu — chưa làm
-- Mục tiêu: corpus "gold" — tìm bản nguồn mở chứa đáp án của từng câu mẫu, định vị trang + trích đoạn.
-- File dự kiến: `tools/corpus/fetch.py` (tải + sha256 + kiểm OA + ghi manifest), `data/manifests/corpus_gold.csv`, cập nhật `evidence` của `data/splits/sample25.jsonl`
-- Cách làm: 13/15 câu AI nêu tên paper → bản arXiv/OpenReview/ACL; DONES → EUROfusion scipub, JACoW (IPAC/LINAC/IBIC), PMC (J. Fusion Energy), KIT.
-  Chỉ tải từ domain trong `sites.txt` (hoặc bản arXiv của cùng bài), có ghi license/OA.
+- File dự kiến: `tools/corpus/fetch.py`, `data/manifests/corpus_gold.csv`, `evidence` trong `data/splits/sample25.jsonl`
+- Cách làm: AI → arXiv/OpenReview/ACL; DONES → EUROfusion scipub, JACoW, PMC, KIT. Chỉ domain trong `sites.txt` (hoặc arXiv cùng bài), ghi license/OA.
 - Tiêu chí:
-  - [ ] ≥ 20/25 câu mẫu có tài liệu nguồn + `quote` tìm thấy trong text PyMuPDF của PDF (fuzzy ≥ 0.9)
-  - [ ] Mọi dòng manifest có url, site ∈ sites.txt (hoặc arXiv), sha256, số trang, license
-- Rủi ro: một số tài liệu DONES không công khai; gold q9 dùng kích thước toà nhà IFMIF (có thể từ tài liệu IFMIF cũ, không phải DONES).
-- Bằng chứng:
+  - [ ] ≥ 20/25 câu mẫu có tài liệu + `quote` tìm thấy trong text PyMuPDF (fuzzy ≥ 0.9)
+  - [ ] Manifest: url, site, sha256, số trang, license
+- Rủi ro: tài liệu DONES không công khai; q9 dùng số liệu toà nhà IFMIF cũ.
 
-## Stage 3b: Baseline sớm trên sample25 — chưa làm
-- Mục tiêu: kiểm hợp lý harness + corpus sớm, không đợi Stage 6; biết lỗi của 02_rag nằm ở retrieval hay generator.
-- File dự kiến: `docs/EXPERIMENTS.md` (exp-001, exp-002)
-- Cách làm: 01_zero_shot và 02_rag (code BTC nguyên bản, qua shim) trên sample25 với corpus = chỉ tài liệu gold (+ C50 nếu đã có);
-  retrieval-only doc-hit@k; phân loại lỗi 02_rag theo 4 nhóm (không tìm đúng tài liệu / tìm đúng nhưng sai đoạn / đúng đoạn nhưng sinh sai / judge sai) và theo domain.
+## Stage 3b: Chẩn đoán trên sample25 — chưa làm
+- Mục tiêu: biết điểm mất ở retrieval hay generator trước khi tối ưu; kiểm cơ chế sliding-window.
+- File dự kiến: `submissions/02_instrumented/main.py` (bản sao 02 lưu doc, page, token offset vào `LAST_DEBUG`), `docs/EXPERIMENTS.md`
+- Cách làm (corpus gold + C50 nếu có, 7B 4-bit local; lặp lại trên 32B ở phiên thuê):
+  (a) 01 vs 02 · (b) `quote_recall@k` + `in_window_hit` · (c) **oracle-chunk**: context thật vs chỉ đoạn chứa quote ·
+  (d) **evidence-first vs evidence-last** · (e) closed-book theo domain.
 - Tiêu chí:
-  - [ ] 02_rag > 01_zero_shot trên sample25 (kiểm "dấu hiệu hướng sai")
-  - [ ] Bảng phân loại lỗi trong EXPERIMENTS.md
-- Bằng chứng:
+  - [ ] 02 > 01 trên sample25
+  - [ ] Quyết định có số: oracle − thật ≥ 3 câu → ưu tiên retrieval; ≤ 1 câu → ưu tiên generator/format
+  - [ ] Bảng phân loại lỗi (không tìm đúng tài liệu / sai đoạn / đúng đoạn nhưng sinh sai / judge sai) theo domain trong EXPERIMENTS.md
 
-## Stage 4: Corpus nhiễu + quy mô — chưa làm
-- Mục tiêu: corpus giống đề (tài liệu thật + nhiễu cùng chủ đề) ở 2 quy mô lồng nhau C50 ⊂ C200 (đều chứa toàn bộ tài liệu gold);
-  C500 chỉ để đo thời gian index, không chặn Tiêu chí tổng.
-- File dự kiến: `tools/corpus/fetch.py` (thêm nguồn: arXiv API, JACoW, EUROfusion, PMC OA), `data/manifests/corpus_C{50,200}.csv`
-- Cách làm: nhiễu cùng chủ đề (máy gia tốc/LIPAc/ESS/chẩn đoán chùm, nhiệt hạch WPENS; LLM/CI/fuzzy/tiến hoá, nhóm DaSCI Granada),
-  có cả bản trùng arXiv vs publisher (nhiễu thật). Tải lịch sự (arXiv ≥ 3 s/request), chỉ open access.
-- Tiêu chí:
-  - [ ] PyMuPDF đọc được ≥ 98% PDF; ghi trang/PDF trung bình, % PDF không có text
-  - [ ] Trang/giây của PyMuPDF và Docling ở C50/C200 + ngoại suy thời gian index tới 5k/10k/20k trang
-  - [ ] Thống kê domain/site của từng quy mô trong manifest
-- Rủi ro: tốn thời gian tải; PDF scan (không có text) → loại hoặc đánh dấu.
-- Bằng chứng:
+## Stage P1b-sớm: Phiên GPU thuê 2–3 giờ — chưa làm (cần người dùng thuê)
+- Khi: sau Stage 3, khoảng 25–27/10. Máy: EzyCloudX 1x RTX PRO 6000 Blackwell 95 GB (105k CP/giờ), zip chạy nguyên `device_map="cuda"`.
+- Việc: cài đúng requirements (Linux, có triton) → chạy 01 trên sample25 để hiệu chỉnh hệ số thời gian (so LB 733 s; decode H100 nhanh hơn ~1.9–2.1×)
+  → chạy Stage 3b (a)–(d) bằng Olmo-3.1-32B → đo nhiễu 32B (2 lượt cùng zip).
+- Tiêu chí: [ ] hệ số thời gian ghi vào AGENTS.md · [ ] kết quả 32B của Stage 3b trong EXPERIMENTS.md
 
-## Stage 5: Câu hỏi tổng hợp + split — chưa làm
-- Mục tiêu: 60–80 câu tổng hợp đã kiểm + 15–20 câu người viết, đủ để chọn retrieval/chunking (25 câu mẫu quá ít: 1 câu = 4 điểm).
-- File dự kiến: `tools/corpus/synth_qa.py`, `tools/corpus/validate_qa.py`, `data/splits/{dev,holdout,sample25}.jsonl`
-- Cách làm: LLM mạnh (DeepSeek) đọc 1 section/bảng của tài liệu trong C200 **ngoài tài liệu gold của sample25**, few-shot bằng template
-  phong cách trừu tượng; phân bố question_type + tỉ lệ "nêu tên paper" (AI ~13/15) giống mẫu; có câu tính toán, ~5% câu tiền đề sai.
-  Kiểm: (1) quote có trong text PDF; (2) model thứ 2 trả lời chỉ từ đoạn evidence → judge "đúng"; (3) closed-book: model mạnh không có tài liệu
-  → nếu đúng thì gắn `closed_book_easy`; (4) người duyệt 20 câu ngẫu nhiên; (5) loại câu có cosine > 0.85 với bất kỳ câu mẫu nào.
-  Split seed 2026: dev / holdout tách theo TÀI LIỆU; sample25 = holdout cuối, không tune trên nó.
-- Tiêu chí:
-  - [ ] ≥ 60 câu tổng hợp qua kiểm (1)+(2)+(5); phân bố question_type và "nêu tên paper" lệch ≤ 10 điểm % so với mẫu
-  - [ ] Tỉ lệ `closed_book_easy` lệch ≤ 15 điểm % so với tỉ lệ closed-book của cùng model trên sample25
-  - [ ] Script kiểm: `doc(dev) ∩ doc(holdout) = ∅` và `doc(dev) ∩ doc(sample25) = ∅`
-- Rủi ro: câu do LLM sinh dễ hơn / khác phong cách câu chuyên gia → chỉ dùng cho retrieval (quy tắc ở Thiết kế chung); kiểm lại khi có 32B (P1b).
-  Câu người viết: cần người dùng/đội viết hoặc duyệt — chưa có người phụ trách.
-- Bằng chứng:
+## Stage 4: Corpus nhiễu — chưa làm (song song, không chặn)
+- C50 ⊂ C200 chứa toàn bộ tài liệu gold; chỉ dùng cho thời gian index + retrieval-only. Nguồn: arXiv API, JACoW, EUROfusion, PMC OA; tải ≥ 3 s/request.
+- Tiêu chí: [ ] PyMuPDF đọc ≥ 98% PDF · [ ] trang/PDF, % PDF không text, trang/giây PyMuPDF vs Docling + ngoại suy 5k/10k/20k trang
 
-## Stage 6: Đo baseline đầy đủ + chốt eval — chưa làm
-- Mục tiêu: số baseline + ngưỡng nhiễu + thời gian theo quy mô corpus; khoá thước đo.
-- File dự kiến: `docs/EXPERIMENTS.md`, `AGENTS.md` (mục Nhiễu đã đo + lệnh chuẩn), `.claude/protected_paths.txt` (bật `eval/**`)
-- Cách làm: chạy 01_zero_shot và 02_rag trên dev/holdout/sample25 với C200 (lên lịch theo số token đo ở Stage 1; chạy đêm);
-  chạy lại 02_rag trên holdout lần 2 không đổi gì → đếm câu lật (nhiễu generation); retrieval-only (doc-hit@k) không cần LLM.
-- Tiêu chí:
-  - [ ] 02_rag > 01_zero_shot trên cả 3 split
-  - [ ] Ngưỡng ra quyết định (số câu lật) ghi vào AGENTS.md; exp-001/002 trong EXPERIMENTS.md
-  - [ ] Bảng tương quan local ↔ LB trong EXPERIMENTS.md (cập nhật sau mỗi bài nộp: điểm local sample25/holdout vs LB)
-  - [ ] `eval/**` bật trong protected_paths
-- Sau đó (P1b, khi thuê H100): chạy 01/02 bằng 32B trên sample25 + holdout → nếu thứ tự/khoảng cách lệch xa LB (29 / 57) thì xem lại bộ câu tổng hợp.
-- Bằng chứng:
+## Stage 5: Câu hỏi tổng hợp — HOÃN (P2b, sau ≥ 3 bài nộp)
+- Chỉ retrieval-only (không chạy LLM sinh câu trả lời trên synthetic); không sinh từ tài liệu gold của sample25; `doc(dev) ∩ doc(sample25) = ∅`.
+- Câu người viết: hoãn tới khi có người phụ trách.
+
+## Lịch nộp (mỗi ngày 1 bài, người dùng upload)
+- **D1 `02-safe`** (Stage 1): kiểm đóng gói, có bài hợp lệ, 1 mẫu nhiễu miễn phí (|D1 − 57.14|).
+- **D2 `02-evidence-last`**: D1 + đảo thứ tự fragment (chunk tốt nhất sát câu hỏi). Thời gian không đổi.
+- **D3 `answer-first-512`**: tốt nhất của D1/D2 + prompt answer-first (1–3 câu, số + đơn vị trước, đủ mọi vế, bác tiền đề sai)
+  + `max_new_tokens` 512 → probe khẩu vị độ dài của judge ẩn + giảm thời gian; tụt ≥ 2.86 → hoàn tác.
+- Probe số trang corpus chỉ nộp nếu D1 > 2700 s.
 
 ## Ước lượng thời gian
-- Stage 1–2: 1 ngày · Stage 3 + 3b: 1–1.5 ngày · Stage 4: 1 ngày · Stage 5: 1 ngày · Stage 6: 1 ngày + máy chạy (7B 4-bit 30–227 s/câu
-  tuỳ độ dài sinh → có thể nhiều giờ/lượt; chạy đêm hoặc trên H100). Tổng ~5–6 ngày → xong khoảng 28/10.
-- Song song (đề xuất, cần người dùng đồng ý — xem PLAN): từ khi Stage 1 xong, mỗi ngày nộp 1 biến thể nhỏ của P4 để không phí lượt nộp.
+- Stage 1 + D1: 22–23/10 · Stage 2 gọn + Stage 3: 23–24/10 · Stage 3b + phiên GPU thuê: 25–27/10 · Stage 4 song song.
 
 ## Nhật ký quyết định
 | Lượt | Sự kiện | Tiêu chí đạt | Quyết định | Lý do + bằng chứng |
 |---|---|---|---|---|
-| 0 | Lập plan P2+P3 v1, gửi hội đồng chấm | — | chờ council round_02 + người dùng duyệt | người dùng yêu cầu 22/10 |
-| 1 | Council round_02: chỉ DeepSeek (key OpenRouter hết hạn); 4 vai chấm 5/10, 6/10, 2 vai không chấm; researcher 6.5 → "sửa nhỏ rồi làm" | — | Sửa thành v2: cách ly sample25, thêm Stage 3b, quy tắc dùng split, test offline/token/lệch shim, judge thêm kappa + leniency, C500 tuỳ chọn, Stage 5 giảm còn 60–80 câu | SYNTHESIS round_02 §5; phiên chính tự kiểm: rò rỉ đúng (v1 dòng sinh câu từ tài liệu gold); KV cache 7B bf16 thực ~3 GiB ở 12k (24 lớp sliding) — vẫn vượt 16 GB |
+| 0 | Lập plan v1, gửi hội đồng chấm | — | chờ council + người dùng | người dùng yêu cầu 22/10 |
+| 1 | Council round_02: chỉ DeepSeek (key OpenRouter hết hạn) → 5/10, 6/10 | — | v2: cách ly sample25, thêm Stage 3b, quy tắc dùng split, judge thêm test | round_02 SYNTHESIS §5; rò rỉ đúng |
+| 2 | Người dùng duyệt Stage 1 + nộp song song | — | worker code harness; phiên chính review, sửa ghi CSV từng dòng | commit `057ff50` |
+| 3 | Council round_06 đủ 8 model: 5 model chấm 6–7.5 (TB 6.8, trung vị 7), cả 5 "sửa nhỏ rồi làm" | Stage 1: 5/7 | v3: D1 nộp ngay sau Stage 1; Stage 2 còn 4 test; Stage 5 hoãn; Stage 3b thêm oracle-chunk + evidence-last + in-window; thêm phiên GPU thuê sớm | round_06 SYNTHESIS §5; phiên chính kiểm: 32B có 48/64 lớp sliding 4096 (config.json); local 4-bit 0/25 câu khác |

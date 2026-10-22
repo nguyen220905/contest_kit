@@ -1,0 +1,126 @@
+{
+  "round": "round_02",
+  "time": "2026-10-22T12:17:51",
+  "rounds": 2,
+  "members": {
+    "grok": {
+      "label": "M4",
+      "model": "x-ai/grok-4.7",
+      "role": "red_team"
+    },
+    "openai": {
+      "label": "M3",
+      "model": "openai/gpt-6-luna",
+      "role": "plan_critic"
+    },
+    "deepseek": {
+      "label": "M1",
+      "model": "deepseek-v4-pro",
+      "role": "root_cause"
+    },
+    "qwen": {
+      "label": "M7",
+      "model": "qwen/qwen3.8-max-0902",
+      "role": "competition_veteran"
+    },
+    "glm": {
+      "label": "M5",
+      "model": "z-ai/glm-5.3",
+      "role": "simplifier"
+    },
+    "minimax": {
+      "label": "M2",
+      "model": "xiaomi/mimo-v2.6-flash",
+      "role": "data_detective"
+    },
+    "kimi": {
+      "label": "M8",
+      "model": "moonshotai/kimi-k3",
+      "role": "alternative"
+    },
+    "gemini": {
+      "label": "M6",
+      "model": "google/gemini-4-argon",
+      "role": "pragmatist"
+    }
+  },
+  "calls": [
+    {
+      "round": 1,
+      "provider": "kimi",
+      "ok": false,
+      "seconds": 0.5,
+      "usage": {},
+      "searches": 0,
+      "sources": 0
+    },
+    {
+      "round": 1,
+      "provider": "qwen",
+      "ok": false,
+      "seconds": 0.6,
+      "usage": {},
+      "searches": 0,
+      "sources": 0
+    },
+    {
+      "round": 1,
+      "provider": "minimax",
+      "ok": false,
+      "seconds": 0.5,
+      "usage": {},
+      "searches": 0,
+      "sources": 0
+    },
+    {
+      "round": 1,
+      "provider": "openai",
+      "ok": false,
+      "seconds": 0.7,
+      "usage": {},
+      "searches": 0,
+      "sources": 0
+    },
+    {
+      "round": 1,
+      "provider": "grok",
+      "ok": false,
+      "seconds": 0.7,
+      "usage": {},
+      "searches": 0,
+      "sources": 0
+    },
+    {
+      "round": 1,
+      "provider": "gemini",
+      "ok": false,
+      "seconds": 0.4,
+      "usage": {},
+      "searches": 0,
+      "sources": 0
+    },
+    {
+      "round": 1,
+      "provider": "glm",
+      "ok": false,
+      "seconds": 0.6,
+      "usage": {},
+      "searches": 0,
+      "sources": 0
+    },
+    {
+      "round": 1,
+      "provider": "deepseek",
+      "ok": true,
+      "seconds": 99.5,
+      "usage": {
+        "prompt_tokens": 5043,
+        "completion_tokens": 8566
+      },
+      "searches": 0,
+      "sources": 0
+    }
+  ],
+  "searches_total": 0,
+  "sources_total": 0
+}

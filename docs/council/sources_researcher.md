@@ -42,3 +42,19 @@
 ## Domain IFMIF-DONES
 - Bernardi et al., The IFMIF-DONES Project: Design Status…, J. Fusion Energy 41:24 (2022), doi 10.1007/s10894-022-00337-5 — https://pmc.ncbi.nlm.nih.gov/articles/PMC9596351/ — [đã mở] open access; 40 MeV/125 mA, Li 25mm 15 m/s.
 - Tài liệu Li loop/Be7/tritium (KIT, EUROfusion scipub, Springer s10894-023-00378-4) — https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPENSCPR18_19806_submitted-4.pdf — [search] khớp chủ đề câu mẫu (Be7, ICS, heat exchanger); scipub.euro-fusion.org nằm trong sites.txt.
+
+# Bổ sung 2026-10-22 (round_02: chấm plan P2+P3 eval harness + corpus dev)
+> Perplexity `--ask` KHÔNG chạy được: OpenRouter trả HTTP 401 "API key expired" (cả 7 model OpenRouter của hội đồng cũng 401; chỉ deepseek gọi thẳng còn sống). Nguồn dưới tự tra bằng WebSearch/WebFetch.
+
+## Judge (LLM-as-judge có tham chiếu)
+- Thakur et al., Judging the Judges: Evaluating Alignment and Vulnerabilities in LLMs-as-Judges, GEM 2025 (arXiv 2406.12624) — https://arxiv.org/abs/2406.12624 — [đã mở] dùng Cohen's kappa thay % đồng ý (đồng ý % cao vẫn lệch điểm tới 5 điểm); judge có xu hướng dễ dãi (leniency), ưa câu dài/thiếu cụ thể; judge nhỏ/lexical vẫn XẾP HẠNG đúng dù điểm tuyệt đối lệch.
+- Krumdick et al., No Free Labels: Limitations of LLM-as-a-Judge Without Human Grounding, 2025 (arXiv 2503.05061) — https://arxiv.org/abs/2503.05061 — [đã mở] tham chiếu đúng nâng kappa 0.14 → 0.78 trên câu judge tự không trả lời được; tham chiếu SAI hại hơn không có tham chiếu; 35% tham chiếu MT-Bench toán sai → phải duyệt `reference_short`.
+- Badshah & Sajjad, Reference-Guided Verdict: LLMs-as-Judges in Automatic Evaluation of Free-Form QA, WiNLP (arXiv 2408.09235) — https://arxiv.org/abs/2408.09235 — [đã mở] ensemble nhiều judge tăng độ tin cậy so với 1 judge.
+- Zheng et al., Judging LLM-as-a-Judge (đã có ở round_01).
+
+## Câu hỏi tổng hợp / đánh giá RAG
+- van Elburg, van der Putten, Marx, Can we Evaluate RAGs with Synthetic Data?, 2025 (arXiv 2508.11758) — https://arxiv.org/abs/2508.11758 — [đã mở] synthetic benchmark xếp hạng ĐÚNG cấu hình retriever (Kendall τ 0.44–0.75) nhưng SAI khi so generator/LLM (τ ≈ 0 hoặc âm) do lệch tác vụ + bias phong cách → dùng câu tổng hợp cho retrieval, cẩn trọng với A/B prompt/format.
+- Shashidhar et al., YourBench: Easy Custom Evaluation Sets for Everyone, 2025 (arXiv 2504.01833) — https://arxiv.org/abs/2504.01833 — [đã mở] sinh câu từ tài liệu + lọc citation grounding; giữ thứ hạng MMLU (Spearman 1.0), ~85% câu đạt chất lượng khi người duyệt.
+- Saad-Falcon et al., ARES, NAACL 2024 (arXiv 2311.09476) — https://arxiv.org/abs/2311.09476 — [đã mở] judge tự động + prediction-powered inference với vài trăm nhãn người để hiệu chỉnh khoảng tin cậy.
+- Rahmani et al., Synthetic Test Collections for Retrieval Evaluation, SIGIR 2024 (arXiv 2405.07767) — https://arxiv.org/abs/2405.07767 — [đã mở] query + judgment tổng hợp cho kết quả xếp hạng gần test collection người làm; bias với hệ cùng LLM nhỏ.
+- Filice et al., Generating Diverse Q&A Benchmarks for RAG Evaluation with DataMorgana, ACL 2025 Industry (arXiv 2501.12789) — https://arxiv.org/abs/2501.12789 — [search] cấu hình phân bố loại câu/người hỏi → câu đa dạng hơn; dùng cho SIGIR LiveRAG 2025.

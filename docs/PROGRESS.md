@@ -11,10 +11,11 @@
 | — | — | — | — | chưa nộp; mốc BTC: zero-shot 29.05 / 733 s, RAG 57.14 / 2080 s |
 
 ## Đang làm
-- Việc: P2 (eval harness) + P3 (corpus dev nguồn mở) — chờ người dùng duyệt bắt đầu
-- Trạng thái: chưa bắt đầu
+- Việc: P2+P3 — plan chi tiết `docs/STAGES.md` v2 (đã sửa theo council round_02), chờ người dùng duyệt
+- Trạng thái: chưa bắt đầu code
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
+- 2026-10-22 — Council round_02 chấm plan P2+P3: chỉ DeepSeek trả lời (key OpenRouter HẾT HẠN, 401) → 5/10 và 6/10, "sửa nhỏ rồi làm"; STAGES.md v2
 - 2026-10-22 — Đọc Discord BTC → `docs/DISCORD.md`: được bundle model bất kỳ (kể cả LLM khác), judge tất định, private 2h là giới hạn mềm, corpus không công bố kích thước
 - 2026-10-15 — P1: `.venv` khớp server (torch 2.8.0+cu128 thấy sm_120, transformers 5.17.0, pip check sạch; bỏ triton vì chỉ có Linux). Smoke test Olmo-3-7B: 4bit 9 tok/s · 4.9 GiB; bf16 11 tok/s · 13.6 GiB; 8bit 2.8 tok/s
 - 2026-10-15 — Council round_01 (8 model vòng 1; vòng 2 chỉ deepseek do OpenRouter hết hạn mức ngày) → SYNTHESIS + REFERENCES (40 nguồn đã mở), PLAN cập nhật P0–P6
@@ -29,7 +30,8 @@
 - Đã rõ (BTC 15/10): dev dùng model cùng kiến trúc (Olmo-3-7B-Instruct), cùng transformers 5.17.0. Ngân sách thuê GPU thoải mái. Dữ liệu thêm chỉ từ nguồn mở.
 - Đã rõ (Discord 19/10): được bundle model bất kỳ, kể cả LLM khác Olmo — chỉ giới hạn zip 1 GB + thời gian.
 - Domain nào có 15 câu trong public (đoán DONES theo tỉ lệ mẫu, chưa chắc).
-- OpenRouter key giới hạn $7/ngày → hội đồng `all` 2 vòng không đủ; muốn chạy lại vòng 2 thì nâng hạn mức hoặc chờ reset.
+- Key OpenRouter **hết hạn** (22/10, HTTP 401) → 7/8 model hội đồng + Perplexity không chạy được; người dùng cần thay key trong `tools/.env`.
+  Trước đó key còn giới hạn $7/ngày → khi thay nên nâng hạn mức.
 
 ## Bẫy đã biết (đừng lặp lại)
 - Đừng ép "chỉ dùng số trong context": gold dùng cả kiến thức chuẩn (ln2, khối lượng riêng Li) và có câu tiền đề sai.

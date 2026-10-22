@@ -12,7 +12,8 @@
 
 ## Đang làm
 - Việc: D1 `02-safe` — zip `submissions/d1_02_safe.zip` (399 MB) đã build + smoke test OK; **chờ người dùng upload Codabench**
-- Tiếp theo: Stage 2 (judge gọn) + Stage 3 (tài liệu gold cho 25 câu mẫu); D2 evidence-last chuẩn bị song song
+- Song song (người dùng duyệt 22/10): Stage 2 judge (worker) · Stage 3 tài liệu gold → `data/corpus/gold/` (không dùng data/raw vì hook bảo vệ) · D2 evidence-last (worker)
+- Chờ người dùng: tạm mở `data/splits/**` để ghi `sample25.jsonl` (reference_short + evidence) khi annotation chốt
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
 - 2026-10-22 — D1 build + smoke (bản giải nén zip, offline, 2 PDF): 3/3 câu OK; 4-bit vs bf16 3/3 câu khác chữ (exp-001)

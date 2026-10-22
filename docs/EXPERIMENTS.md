@@ -8,7 +8,8 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 | BTC-01 | 27/9 | Baseline BTC zero-shot (`starter_kit/01_zero_shot`) | — | — | 29.05 / 733 s | mốc, không nộp lại | — |
 | BTC-02 | 27/9 | Baseline BTC RAG (`starter_kit/02_rag`) | — | — | 57.14 / 2080 s | mốc, không nộp lại | — |
 | exp-001 | 22/10 | Harness Stage 1: 01_zero_shot, Olmo-3-7B 4-bit, sample25, 2 lượt | chưa chấm | — | — | local tất định (0/25 khác chữ); 4-bit ≠ bf16 (3/3 khác chữ) | 057ff50 |
-| D1 | 22/10 | `02-safe`: 02_rag + vá an toàn (PDF đệ quy/hoa thường, không reload khi lỗi, try/except) | smoke 3/3 OK | — | chờ nộp | kỳ vọng ≈ 57.14; |D1 − 57.14| = mẫu nhiễu LB đầu tiên | (commit này) |
+| D1 | 22/10 | `02-safe`: 02_rag + vá an toàn (PDF đệ quy/hoa thường, không reload khi lỗi, try/except) | smoke 3/3 OK | — | chờ nộp | kỳ vọng ≈ 57.14; |D1 − 57.14| = mẫu nhiễu LB đầu tiên | d31608b |
+| D2 | 22/10 | `02-evidence-last`: D1 + đảo thứ tự fragment (tốt nhất nằm cuối, trong cửa sổ 4096 của 48/64 lớp sliding của 32B) | smoke 2/2 OK | — | chờ nộp (sau D1) | 1 thay đổi so với D1; đọc kết quả với ngưỡng max(2.86, |D1 − 57.14|) | (commit này) |
 
 ## Chi tiết
 ### exp-001 — 01_zero_shot local (kiểm harness, đo tất định + lệch shim)
@@ -25,3 +26,10 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 - Smoke test (từ bản giải nén zip, 7B 4-bit, offline, corpus 2 PDF arXiv có thư mục con + đuôi `.PDF`): index 177 chunk, 3/3 câu trả str, 0 lỗi,
   VRAM đỉnh 11 GB. Thư mục rỗng → index None, không crash (worker kiểm). Thời gian local không đại diện server.
 - Kỳ vọng LB: ≈ 57.14 (cùng prompt/retrieval/generation với 02_rag trên corpus phẳng). Kết quả: <chờ nộp>.
+
+### D2 — `submissions/d2_evidence_last` (evidence-last)
+- Giả thuyết: Olmo-3.1-32B có 48/64 lớp sliding-window 4096; 02_rag đặt fragment hạng 1 ở ĐẦU context ~10k → 48 lớp không thấy khi sinh.
+  Đặt fragment hạng 1 sát câu hỏi → model dùng evidence tốt hơn. Bác bỏ nếu LB(D2) − LB(D1) ≤ −max(2.86, |D1 − 57.14|).
+- Thay đổi: đúng 1 dòng `selected.reverse()` trong `_build_context` (cùng tập fragment, cùng ngân sách). Worker kiểm bằng CPU: D2 = đảo ngược D1.
+- Build: `submissions/d2_evidence_last.zip` 399 MB (giải nén 435 MB). Smoke (bản giải nén, 7B 4-bit, offline, 2 PDF): 2/2 câu OK, 0 lỗi;
+  khác chữ D1 2/2, token trung bình 348 vs 435 (local 7B, không kết luận).

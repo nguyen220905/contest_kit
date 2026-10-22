@@ -11,8 +11,9 @@
 | — | — | — | — | chưa nộp; mốc BTC: zero-shot 29.05 / 733 s, RAG 57.14 / 2080 s |
 
 ## Đang làm
-- Việc: P2+P3 — plan chi tiết `docs/STAGES.md` v2 (đã sửa theo council round_02), chờ người dùng duyệt
-- Trạng thái: chưa bắt đầu code
+- Việc: Stage 1 (harness) của `docs/STAGES.md` v2 — người dùng duyệt 22/10; council đủ 8 model đang chấm lại v2
+- Sẽ sửa: `eval/dev_shim.py`, `eval/run_pipeline.py`, `eval/compare_runs.py` (mới)
+- Trạng thái: worker đang code
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
 - 2026-10-22 — Council round_02 chấm plan P2+P3: chỉ DeepSeek trả lời (key OpenRouter HẾT HẠN, 401) → 5/10 và 6/10, "sửa nhỏ rồi làm"; STAGES.md v2
@@ -29,6 +30,8 @@
 ## Vướng mắc / câu hỏi mở
 - Đã rõ (BTC 15/10): dev dùng model cùng kiến trúc (Olmo-3-7B-Instruct), cùng transformers 5.17.0. Ngân sách thuê GPU thoải mái. Dữ liệu thêm chỉ từ nguồn mở.
 - Đã rõ (Discord 19/10): được bundle model bất kỳ, kể cả LLM khác Olmo — chỉ giới hạn zip 1 GB + thời gian.
+- GPU thuê: EzyCloudX Docker (không có H100/A100-80GB) → đề xuất 1x RTX PRO 6000 Blackwell 95 GB (105k CP/giờ); quy đổi thời gian bằng 02_rag vs LB 2080 s.
+- `data/splits/**` bị hook bảo vệ → Stage 3 cần người dùng cho phép tạm để ghi split lần đầu.
 - Domain nào có 15 câu trong public (đoán DONES theo tỉ lệ mẫu, chưa chắc).
 - Key OpenRouter **hết hạn** (22/10, HTTP 401) → 7/8 model hội đồng + Perplexity không chạy được; người dùng cần thay key trong `tools/.env`.
   Trước đó key còn giới hạn $7/ngày → khi thay nên nâng hạn mức.

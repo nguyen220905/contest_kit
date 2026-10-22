@@ -58,7 +58,8 @@
   - **Eval chuẩn** (dùng để so sánh MỌI thí nghiệm): `python eval/evaluate.py --run results/<run>` — CHƯA dựng (chạy `answer()` trên tập dev + LLM judge)
   - Tạo file nộp: `<chưa có — mẫu: starter_kit/01_zero_shot/build.sh>`
   - Test nhanh / smoke test môi trường: `.venv\Scripts\python scripts/smoke_test.py --n 3` (Olmo-3-7B 4-bit, in tok/s + VRAM).
-    Smoke test bài nộp (`answer()` trả str, thời gian): `<chưa có — làm cùng P4>`
+    Chạy bài nộp như server (`answer()` tuần tự, thời gian, dự phóng 1h/2h): `.venv\Scripts\python eval/run_pipeline.py --submission <dir> --split sample25 --run results/<run> --offline`
+    (`--quant none` = bf16; `--limit N` để thử nhanh). So 2 run: `.venv\Scripts\python eval/compare_runs.py results/<a> results/<b>`
 - Nhiễu đã đo: <chưa đo> → không chọn model theo chênh lệch LB nhỏ hơn mức này.
 
 ### Hợp đồng eval (bắt buộc, làm đầu tiên)

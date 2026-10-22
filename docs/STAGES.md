@@ -58,7 +58,7 @@ Trạng thái: lập kế hoạch
 - Thời gian index/trang local > 4× số liệu benchmark PyMuPDF/Docling → lỗi môi trường, dừng đo thời gian.
 - Cùng một lỗi lặp lại 2 lần trong một stage.
 
-## Stage 1: Harness chạy bài — chưa làm
+## Stage 1: Harness chạy bài — đang làm (người dùng duyệt 22/10)
 - Mục tiêu: chạy bất kỳ thư mục bài nộp nào trên một split, đúng như server (1 process, tuần tự, offline, đo thời gian), ghi predictions.
 - File dự kiến: `eval/run_pipeline.py`, `eval/dev_shim.py`
 - Tiêu chí (lệnh → kết quả mong đợi):

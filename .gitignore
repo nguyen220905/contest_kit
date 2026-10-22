@@ -5,7 +5,9 @@
 tools/.env
 
 # data & outputs (data/splits nên commit nếu nhỏ: xoá dòng dưới và thêm data/* + !data/splits/)
-data/
+data/*
+!data/splits/
+!data/manifests/
 results/
 runs/
 checkpoints/

@@ -12,10 +12,14 @@
 
 ## Đang làm
 - Việc: D1 `02-safe` — zip `submissions/d1_02_safe.zip` (399 MB) đã build + smoke test OK; **chờ người dùng upload Codabench**
-- Song song (người dùng duyệt 22/10): Stage 2 judge (worker) · Stage 3 tài liệu gold → `data/corpus/gold/` (không dùng data/raw vì hook bảo vệ) · D2 evidence-last (worker)
+- Stage 2 xong (49cfbb0), Stage 3 xong (addac62), D2 zip sẵn (5e6a7a8). exp-002: D1 trên corpus gold = 38.34 (10/25) > zero-shot 13.34
+- Tiếp: Stage 3b còn lại (02 instrumented → quote_recall/in_window, oracle-chunk, evidence-last, closed-book) — mỗi lượt 25 câu local ~2.3 h → nên chạy trên GPU thuê
 - Chờ người dùng: tạm mở `data/splits/**` để ghi `sample25.jsonl` (reference_short + evidence) khi annotation chốt
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
+- 2026-10-22 — exp-002: D1 RAG trên corpus gold, sample25, 7B 4-bit → 38.34 (DONES 30, AI 46.7), +7 câu so với zero-shot
+- 2026-10-22 — Stage 3: corpus gold 18 PDF/366 trang, 20/25 câu mẫu có quote xác nhận
+- 2026-10-22 — Stage 2: judge DeepSeek judge-v2, 4/4 test hiệu chỉnh PASS; exp-001 zero-shot 7B = 13.34
 - 2026-10-22 — D1 build + smoke (bản giải nén zip, offline, 2 PDF): 3/3 câu OK; 4-bit vs bf16 3/3 câu khác chữ (exp-001)
 - 2026-10-22 — Council round_06 (đủ 8 model) chấm STAGES v2: TB 6.8/10, trung vị 7, "sửa nhỏ rồi làm" → STAGES v3 (D1 nộp sớm, Stage 5 hoãn, Stage 3b thêm oracle-chunk/evidence-last)
 - 2026-10-22 — Stage 1 harness: 01_zero_shot 7B 4-bit sample25 ×2 → local tất định (0/25 khác chữ), token p50/p95 597/1738, 77–89 s/câu

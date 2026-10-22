@@ -86,7 +86,12 @@ Trạng thái: lập kế hoạch
   - Judge: `eval/judge.py` (DeepSeek, prompt judge-v2, cache `data/work/llm_cache.jsonl`), `eval/evaluate.py`, `eval/calibrate_judge.py`
 - Rủi ro: judge ẩn khác hẳn → số local chỉ để so sánh tương đối.
 
-## Stage 3: Tài liệu nguồn cho 25 câu mẫu — chưa làm
+## Stage 3: Tài liệu nguồn cho 25 câu mẫu — xong 22/10 (commit addac62)
+- Kết quả: 18 PDF / 366 trang / 61 MB ở `data/corpus/gold/` (không commit; corpus ở `data/corpus/` vì `data/raw/**` được bảo vệ cho dữ liệu gốc BTC).
+  `fetch.py check`: 20/25 câu có quote xác nhận (DONES 7/10, AI 13/15). Không tìm được bản mở: q1, q2, q4 (DONES), q18, q21 (AI);
+  partial: q5 (chi tiết FISPACT-II ở bài đóng Frisoni 2020), q12, q23. Evidence: `data/work/sample25_evidence.jsonl`.
+- Lệch gold vs tài liệu: q6 gold 250–273 °C, tài liệu 2025 ghi 318→300 °C; q9 gold dùng kích thước toà nhà IFMIF cũ (DONES 159 m);
+  q3, q15 phần tính (ln2, chia L) ngoài tài liệu. Một số nguồn là bản OA ở kho trường (KIT, IRB, UGR, Tilburg) hoặc Wayback (MDPI, UHasselt).
 - File dự kiến: `tools/corpus/fetch.py`, `data/manifests/corpus_gold.csv`, `evidence` trong `data/splits/sample25.jsonl`
 - Cách làm: AI → arXiv/OpenReview/ACL; DONES → EUROfusion scipub, JACoW, PMC, KIT. Chỉ domain trong `sites.txt` (hoặc arXiv cùng bài), ghi license/OA.
 - Tiêu chí:
@@ -101,7 +106,7 @@ Trạng thái: lập kế hoạch
   (a) 01 vs 02 · (b) `quote_recall@k` + `in_window_hit` · (c) **oracle-chunk**: context thật vs chỉ đoạn chứa quote ·
   (d) **evidence-first vs evidence-last** · (e) closed-book theo domain.
 - Tiêu chí:
-  - [ ] 02 > 01 trên sample25
+  - [x] 02 > 01 trên sample25 — D1 38.34 (10/25) vs zero-shot 13.34 (3/25), +7 câu, 0 mất (exp-002)
   - [ ] Quyết định có số: oracle − thật ≥ 3 câu → ưu tiên retrieval; ≤ 1 câu → ưu tiên generator/format
   - [ ] Bảng phân loại lỗi (không tìm đúng tài liệu / sai đoạn / đúng đoạn nhưng sinh sai / judge sai) theo domain trong EXPERIMENTS.md
 

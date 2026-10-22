@@ -70,17 +70,20 @@ Trạng thái: lập kế hoạch
   - [x] Zip D1: `main.py` ở gốc, giải nén 435 MB, không chứa `eval/`/`dev_shim`; harness `--offline` từ bản giải nén, 2 PDF thật → 3/3 câu trả str (results/s1_d1_smoke)
 - Bằng chứng: exp001_zs_4bit_a/b (run_info.json), compare_runs 0/25.
 
-## Stage 2: Judge + metrics (gọn) — chưa làm
+## Stage 2: Judge + metrics (gọn) — xong 22/10 (chờ ghi refs vào data/splits khi người dùng mở bảo vệ)
 - File dự kiến: `eval/judge.py`, `eval/evaluate.py` (= run_pipeline + judge + metrics; `--judge-only`), `eval/calibrate_judge.py`
 - Thiết kế: J1 = DeepSeek, temperature 0, JSON {verdict, reason}, cache theo hash. Input: câu hỏi + `reference_short` + câu trả lời.
   `reference_short` = atomic claim (giá trị + đơn vị + thực thể + cách xử lý tiền đề sai) + cờ `outside_doc / false_premise / closed_book`;
   LLM rút gọn từ gold dài + người duyệt, giới hạn 2 giờ.
 - Tiêu chí (4 test hiệu chỉnh trên sample25):
-  - [ ] gold diễn đạt lại → đúng ≥ 24/25
-  - [ ] gold đổi số/đơn vị/thực thể → bác ≥ 90%
-  - [ ] trả lời lạc đề → bác 25/25
-  - [ ] thiếu 1 vế của câu nhiều vế → bác ≥ 80%
-  - [ ] Báo cáo (không làm cổng): lật verdict khi dùng `reference_long` vs `reference_short`; bất đồng với judge phụ nếu chạy
+  - [x] gold diễn đạt lại → đúng ≥ 24/25 — 25/25 (judge-v2, results/calibration/20261022-1705)
+  - [x] gold đổi số/đơn vị/thực thể → bác ≥ 90% — 37/38 = 97% trên biến thể ĐƯỢC XÁC NHẬN có mâu thuẫn (GPT kiểm);
+        thô 39/50 = 78% (12 biến thể không thật sự mâu thuẫn tham chiếu). Định nghĩa cổng làm rõ: chỉ tính biến thể hợp lệ — báo người dùng 22/10
+  - [x] trả lời lạc đề → bác 25/25
+  - [x] thiếu 1 vế của câu nhiều vế → bác ≥ 80% — 4/4 (chỉ 4 câu multi_part)
+  - [x] Báo cáo: lật verdict long vs short 1/63 = 1.6%
+  - reference_short: GPT soạn nháp → phiên chính duyệt, sửa 5 câu (#5, #16, #17, #21, #23 nhồi chi tiết ngoài trọng tâm) → `data/work/sample25_refs.jsonl`
+  - Judge: `eval/judge.py` (DeepSeek, prompt judge-v2, cache `data/work/llm_cache.jsonl`), `eval/evaluate.py`, `eval/calibrate_judge.py`
 - Rủi ro: judge ẩn khác hẳn → số local chỉ để so sánh tương đối.
 
 ## Stage 3: Tài liệu nguồn cho 25 câu mẫu — chưa làm

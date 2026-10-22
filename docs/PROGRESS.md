@@ -14,7 +14,7 @@
 - Việc: D1 `02-safe` — zip `submissions/d1_02_safe.zip` (399 MB) đã build + smoke test OK; **chờ người dùng upload Codabench**
 - Stage 2 xong (49cfbb0), Stage 3 xong (addac62), D2 zip sẵn (5e6a7a8). exp-002: D1 trên corpus gold = 38.34 (10/25) > zero-shot 13.34
 - Tiếp: Stage 3b còn lại (02 instrumented → quote_recall/in_window, oracle-chunk, evidence-last, closed-book) — mỗi lượt 25 câu local ~2.3 h → nên chạy trên GPU thuê
-- Chờ người dùng: tạm mở `data/splits/**` để ghi `sample25.jsonl` (reference_short + evidence) khi annotation chốt
+- `data/splits/sample25.jsonl` đã ghi 22/10 (người dùng cho phép): reference_short đã duyệt + evidence (17 found / 3 partial / 5 not_found)
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
 - 2026-10-22 — exp-002: D1 RAG trên corpus gold, sample25, 7B 4-bit → 38.34 (DONES 30, AI 46.7), +7 câu so với zero-shot
@@ -38,7 +38,8 @@
 - Đã rõ (BTC 15/10): dev dùng model cùng kiến trúc (Olmo-3-7B-Instruct), cùng transformers 5.17.0. Ngân sách thuê GPU thoải mái. Dữ liệu thêm chỉ từ nguồn mở.
 - Đã rõ (Discord 19/10): được bundle model bất kỳ, kể cả LLM khác Olmo — chỉ giới hạn zip 1 GB + thời gian.
 - GPU thuê: EzyCloudX Docker (không có H100/A100-80GB) → đề xuất 1x RTX PRO 6000 Blackwell 95 GB (105k CP/giờ); quy đổi thời gian bằng 02_rag vs LB 2080 s.
-- `data/splits/**` bị hook bảo vệ → Stage 3 cần người dùng cho phép tạm để ghi split lần đầu.
+- `data/splits/**` vẫn được hook bảo vệ; sample25.jsonl ghi 1 lần qua `scripts/build_sample25_split.py` (người dùng cho phép 22/10).
+- Codabench (129.175.8.21) từ chối kết nối 22/10 tối (cả từ ngoài) → chưa nộp được D1. Upload zip 399 MB phải do người dùng bấm (tool upload ≤ 10 MB).
 - Domain nào có 15 câu trong public (đoán DONES theo tỉ lệ mẫu, chưa chắc).
 - Key OpenRouter **hết hạn** (22/10, HTTP 401) → 7/8 model hội đồng + Perplexity không chạy được; người dùng cần thay key trong `tools/.env`.
   Trước đó key còn giới hạn $7/ngày → khi thay nên nâng hạn mức.

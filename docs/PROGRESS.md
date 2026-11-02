@@ -8,7 +8,8 @@
 ## Điểm tốt nhất
 | Metric local | LB public | File nộp | Thí nghiệm | Ghi chú |
 |---|---|---|---|---|
-| — | — | — | — | chưa nộp; mốc BTC: zero-shot 29.05 / 733 s, RAG 57.14 / 2080 s |
+| 38.34 (sample25, gold, 7B 4-bit) | **57.14** | d1_02_safe.zip (29/10) | D1 | = baseline BTC; D2 evidence-last 49.05 (−8.09, bác bỏ) |
+LB 2/11 (49 đội): top 72.86 · top 20 = 64.76 → cần ≥ +8 điểm.
 
 ## Đang làm
 - Việc: D1 `02-safe` — zip `submissions/d1_02_safe.zip` (399 MB) đã build + smoke test OK; **chờ người dùng upload Codabench**

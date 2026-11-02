@@ -8,9 +8,9 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 | BTC-01 | 27/9 | Baseline BTC zero-shot (`starter_kit/01_zero_shot`) | — | — | 29.05 / 733 s | mốc, không nộp lại | — |
 | BTC-02 | 27/9 | Baseline BTC RAG (`starter_kit/02_rag`) | — | — | 57.14 / 2080 s | mốc, không nộp lại | — |
 | exp-001 | 22/10 | Harness Stage 1: 01_zero_shot, Olmo-3-7B 4-bit, sample25, 2 lượt | **13.34** (3/25; DONES 20.0, AI 6.67) | — | — | local tất định (0/25 khác chữ); 4-bit ≠ bf16 (3/3 khác chữ); 7B zero-shot trả lời chung chung, thiếu số/chi tiết | 057ff50 |
-| D1 | 22/10 | `02-safe`: 02_rag + vá an toàn (PDF đệ quy/hoa thường, không reload khi lỗi, try/except) | smoke 3/3 OK | — | chờ nộp | kỳ vọng ≈ 57.14; |D1 − 57.14| = mẫu nhiễu LB đầu tiên | d31608b |
+| D1 | 22/10 | `02-safe`: 02_rag + vá an toàn (PDF đệ quy/hoa thường, không reload khi lỗi, try/except) | 38.34 (exp-002) | — | **57.14** (nộp 29/10) | = đúng baseline BTC → server tất định, nhiễu LB với cùng code = 0 | d31608b |
 | exp-002 | 22/10 | D1 (`02-safe`) trên corpus gold (18 PDF/366 trang), sample25, 7B 4-bit | **38.34** (10/25; DONES 30.0, AI 46.67) | +25.0 vs exp-001 | — | RAG > zero-shot: +7 câu, 0 câu mất (verdict lật 7, đều lên) → tiêu chí "02 > 01" đạt | (commit này) |
-| D2 | 22/10 | `02-evidence-last`: D1 + đảo thứ tự fragment (tốt nhất nằm cuối, trong cửa sổ 4096 của 48/64 lớp sliding của 32B) | smoke 2/2 OK | — | chờ nộp (sau D1) | 1 thay đổi so với D1; đọc kết quả với ngưỡng max(2.86, |D1 − 57.14|) | (commit này) |
+| D2 | 22/10 | `02-evidence-last`: D1 + đảo thứ tự fragment (tốt nhất nằm cuối, trong cửa sổ 4096 của 48/64 lớp sliding của 32B) | chưa chạy | **−8.09** | **49.05** (nộp 30/10) | BÁC BỎ: 32B dựa vào fragment ĐẦU context; độ chính xác top fragment là đòn bẩy lớn | 5e6a7a8 |
 
 ## Chi tiết
 ### exp-001 — 01_zero_shot local (kiểm harness, đo tất định + lệch shim)
@@ -45,3 +45,6 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 - Thay đổi: đúng 1 dòng `selected.reverse()` trong `_build_context` (cùng tập fragment, cùng ngân sách). Worker kiểm bằng CPU: D2 = đảo ngược D1.
 - Build: `submissions/d2_evidence_last.zip` 399 MB (giải nén 435 MB). Smoke (bản giải nén, 7B 4-bit, offline, 2 PDF): 2/2 câu OK, 0 lỗi;
   khác chữ D1 2/2, token trung bình 348 vs 435 (local 7B, không kết luận).
+- **Kết quả LB (30/10): 49.05 vs D1 57.14 → −8.09 (vượt ngưỡng 2.86) → bác bỏ.** Đặt fragment hạng thấp ở đầu context và hạng 1 sát câu hỏi
+  làm 32B trả lời kém hơn: model bám vào phần ĐẦU context (primacy) mạnh hơn hiệu ứng sliding-window. Hệ quả cho các bước sau:
+  giữ thứ tự hạng giảm dần; tăng độ chính xác của vài fragment đầu (hybrid/rerank) và bớt fragment nhiễu là hướng đáng thử.

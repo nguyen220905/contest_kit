@@ -14,6 +14,20 @@ Chi tiết + bằng chứng: `docs/council/round_01/SYNTHESIS.md` · nguồn cho
 - Zip 1 GB: BGE-M3 / bge-reranker-v2-m3 (2.27 GB) không vừa. Docling không bật table structure được trên server (`starter_kit/02_rag/main.py:60`).
 - Baseline 02_rag dễ vỡ: `glob("*.pdf")` không đệ quy (`02_rag/main.py:89`), `answer()` không try/except → luôn bọc và luôn trả `str`.
 
+## Dữ kiện từ bài nộp (2026-11-02)
+- D1 (`02-safe`) = **57.14** đúng bằng baseline BTC → server tất định; cùng code = cùng điểm. Δ ≥ 1.43 giữa 2 bài là thật trên 50 câu public
+  (nhưng vẫn tránh tune theo 50 câu: private chấm đủ 100 câu).
+- D2 (evidence-last) = **49.05 (−8.09)** → Olmo-32B dựa vào fragment ĐẦU context; độ chính xác top fragment + bớt nhiễu là đòn bẩy lớn.
+- LB 2/11: 49 đội, top 72.86 / 72.38 / 70.95; **top 20 = 64.76** → cần ≥ +8 điểm so với D1.
+
+## Lộ trình nộp từ 2/11 (mỗi ngày 1 bài, 1 thay đổi, chọn bằng số liệu phòng thí nghiệm retrieval + local)
+| Lượt | Thay đổi so với best | Bằng chứng cần có trước khi nộp | Trạng thái |
+|---|---|---|---|
+| D3 | Retrieval tốt nhất từ phòng thí nghiệm (hybrid BM25+dense / embedder khác), giữ thứ tự hạng giảm dần | quote_recall@5 tăng rõ trên sample25 (gold + nhiễu C200) | đang đo |
+| D4 | Rerank cross-encoder + ít fragment hơn (context ngắn, chính xác hơn) | recall@3 tăng; thời gian không tăng quá | chờ |
+| D5 | Prompt dùng context (system prompt hiện nói "based on your knowledge") + answer-first | local 7B + 32B (GPU thuê) không thua trên sample25 | chờ |
+| D6 | PyMuPDF thay Docling (nhanh hơn ~10×) → dồn thời gian cho rerank/context | recall không giảm; thời gian giảm | chờ |
+
 ## Dữ kiện từ Discord BTC (đọc 2026-10-22, chi tiết `docs/DISCORD.md`)
 - **Được bundle model bất kỳ** (sinh hay không), Olmo không bắt buộc là LLM duy nhất; "only model you may load" đã xoá. Còn lại: zip 1 GB + thời gian.
 - Judge **tất định** → nộp lại cùng zip mà điểm đổi là do generation không tất định. Nhiễu LB = nhiễu sinh câu trả lời, không phải judge.

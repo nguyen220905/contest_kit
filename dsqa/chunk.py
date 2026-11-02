@@ -38,13 +38,14 @@ def chunk_pages(doc_id, pages, size=800, overlap=150, prefix_title=False) -> lis
     """-> [{doc, page, text, etext}]. `text` goes into the prompt; `etext` (= text, or
     '[title]\\n' + text when prefix_title) is what gets embedded / BM25-indexed.
     page = page of the paragraph that started the chunk."""
-    title = _title(pages) if prefix_title else ""
+    doc_title = _title(pages)
+    title = doc_title if prefix_title else ""
     chunks = []
     cur, cur_page = "", None
 
     def emit():
         etext = f"[{title}]\n{cur}" if title else cur
-        chunks.append({"doc": doc_id, "page": cur_page, "text": cur, "etext": etext})
+        chunks.append({"doc": doc_id, "page": cur_page, "text": cur, "etext": etext, "title": doc_title})
 
     for pg in pages:
         for para in _units(pg["text"], size):

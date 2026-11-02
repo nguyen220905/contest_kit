@@ -19,11 +19,23 @@ class Retriever:
     rerank_model: CrossEncoder path/id or None; rerank_n: top-N candidates reranked."""
 
     def __init__(self, chunks, mode="dense", embed_model=None, query_prefix="", device="cpu",
-                 rerank_model=None, rerank_n=50, embeddings=None):
+                 rerank_model=None, rerank_n=50, embeddings=None, title_rrf=False, title_docs=3):
         if mode not in ("dense", "bm25", "hybrid"):
             raise ValueError(f"unknown mode {mode!r}")
         self.chunks, self.mode, self.query_prefix = chunks, mode, query_prefix
         self.rerank_n = rerank_n
+        # title_rrf (hybrid only): 3rd RRF list = chunks of the `title_docs` documents whose title best
+        # matches the question (BM25 over document titles), each doc's chunks in dense order
+        self.title_rrf, self.title_docs = title_rrf and mode == "hybrid", title_docs
+        self.title_bm25 = None
+        if self.title_rrf:
+            from rank_bm25 import BM25Okapi
+            self.docs = list(dict.fromkeys(c["doc"] for c in chunks))
+            titles = {c["doc"]: c.get("title", "") for c in chunks}
+            self.title_bm25 = BM25Okapi([tokenize(titles[d]) or [""] for d in self.docs])
+            self.doc_chunks = {}
+            for i, c in enumerate(chunks):
+                self.doc_chunks.setdefault(c["doc"], []).append(i)
         self.texts = [c.get("etext") or c["text"] for c in chunks]
         self.t_embed = 0.0
         self.embeddings = embeddings
@@ -81,8 +93,19 @@ class Retriever:
             res = [(int(i), float(s[i])) for i in top]
         else:
             fused = {}
-            for s in (self._dense(question), self._bm25(question)):
-                for r, i in enumerate(self._top(s, 200)):
+            dense = self._dense(question)
+            lists = [self._top(dense, 200), self._top(self._bm25(question), 200)]
+            if self.title_rrf:
+                ts = np.asarray(self.title_bm25.get_scores(tokenize(question) or [""]), dtype=np.float32)
+                tl = []
+                for di in self._top(ts, self.title_docs):
+                    if ts[di] <= 0:
+                        break
+                    idx = np.asarray(self.doc_chunks[self.docs[di]])
+                    tl += [int(i) for i in idx[np.argsort(-dense[idx])]]
+                lists.append(tl[:200])
+            for lst in lists:
+                for r, i in enumerate(lst):
                     fused[int(i)] = fused.get(int(i), 0.0) + 1.0 / (60 + r + 1)
             res = sorted(fused.items(), key=lambda x: -x[1])[:need]
         if self.cross and res:

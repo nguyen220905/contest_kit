@@ -47,6 +47,15 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 - Nhận xét — vì sao: BM25 bắt tên paper/thuật ngữ chính xác; gắn tiêu đề giúp câu nêu tên paper (13/15 câu AI). bge không hơn MiniLM ổn định
   (n nhỏ). Rerank ms-marco (huấn luyện trên web search) hạ thứ hạng đoạn khoa học → loại. Corpus chỉ 18 tài liệu → cần kiểm lại với nhiễu C200.
 
+### exp-003b — phòng thí nghiệm trên corpus có nhiễu C200 (gold 18 + nhiễu 182 PDF, ~3780 trang, 20.8k chunk pymupdf)
+- Thêm thước đo `in_ctx@Bk` = quote evidence nằm trọn trong B token đầu của context (bộ ghép kiểu D1, token Olmo).
+- Kết quả (in_ctx@2k / @5k / @10k / MRR): c1 dense MiniLM .35/.45/.55/.308 · c3 hybrid .45/.55/.70/.284 · c11 hybrid+tiêu đề .55/.55/.70/.304 ·
+  c13 +title_rrf .50/.55/.65/.272 · **c14 c11+chunk 1200/200 .50/.65/.75/.356** · c15 chunk 1600/250 .50/.60/.75/.361 ·
+  c16 chunk 400/80 .35/.40/.50/.118 · c7 bge-small+tiêu đề .55/.65/.70/.332.
+- Nhận xét — vì sao: có nhiễu, hybrid+tiêu đề vẫn đưa evidence vào context 10k ở 70% câu (dense 55%) → hướng D3 đúng. Chunk lớn hơn (1200)
+  giữ đoạn bằng chứng liền mạch → in_ctx@5k +0.10. Định tuyến theo tiêu đề (RRF list 3) và chunk nhỏ làm tệ → loại.
+  Còn ~25% câu evidence không vào được 10k token → giới hạn trên của pipeline hiện tại. Docling trên C200 (c0/c9/c18) đang chạy.
+
 ### D3 — `submissions/d3_hybrid_title`
 - D1 + đúng khối retrieval c9, dùng nguyên `dsqa/` (bundle trong zip). Bản giải nén zip: 2633 chunk và doc_rank khớp lab c9.
 - Build: `submissions/d3_hybrid_title.zip` 399 MB (giải nén 435 MB). Không thêm model (MiniLM sẵn có, BM25 = rank_bm25 trên server).

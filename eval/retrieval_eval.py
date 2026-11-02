@@ -54,7 +54,36 @@ CONFIGS = {
                 embed="bge-small", prefix_title=True),
     "c11": dict(desc="pymupdf + hybrid(minilm,bm25) + prefix_title", parser="pymupdf", mode="hybrid",
                 embed="minilm", prefix_title=True),
+    # 2/11: định tuyến theo tiêu đề + kích thước chunk (trên c11, pymupdf cho nhanh)
+    "c13": dict(desc="c11 + title_rrf (3rd RRF list: chunks of top-3 title-matching docs)", parser="pymupdf",
+                mode="hybrid", embed="minilm", prefix_title=True, title_rrf=True),
+    "c14": dict(desc="c11 with chunks 1200/200", parser="pymupdf", mode="hybrid", embed="minilm",
+                prefix_title=True, size=1200, overlap=200),
+    "c15": dict(desc="c11 with chunks 1600/250", parser="pymupdf", mode="hybrid", embed="minilm",
+                prefix_title=True, size=1600, overlap=250),
+    "c16": dict(desc="c11 with chunks 400/80", parser="pymupdf", mode="hybrid", embed="minilm",
+                prefix_title=True, size=400, overlap=80),
+    "c17": dict(desc="c9 (docling) + title_rrf", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, title_rrf=True),
+    "c18": dict(desc="c9 (docling) with chunks 1200/200", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, size=1200, overlap=200),
+    "c19": dict(desc="c14 (pymupdf 1200/200) with bge-small", parser="pymupdf", mode="hybrid",
+                embed="bge-small", prefix_title=True, size=1200, overlap=200),
 }
+BUDGETS = [2000, 5000, 10000]  # token budget của context (D1/D3 ghép tới 10k)
+SEARCH_K = 200
+
+
+_TOK = None
+
+
+def ntok(text):
+    """Số token Olmo (cùng vocab 7B/32B) — giống bộ ghép context của D1."""
+    global _TOK
+    if _TOK is None:
+        from transformers import AutoTokenizer
+        _TOK = AutoTokenizer.from_pretrained("allenai/Olmo-3-7B-Instruct")
+    return len(_TOK.encode(text))
 
 
 def dir_mb(p):
@@ -154,21 +183,24 @@ def evaluate(retr, chunks, rows, doc_ids_known):
             continue
         quotes = [q for q in (norm(e.get("quote"))[:300] for e in ev) if q]
         docs = {e.get("doc_id") for e in ev if e.get("doc_id")}
-        res = retr.search(r["question"], max(KS))
-        hit_rank = None
-        doc_rank = None
+        res = retr.search(r["question"], SEARCH_K)
+        hit_rank = doc_rank = hit_ctx_end = None
+        used = 0  # token đã ghép vào context (bộ ghép D1: thêm chunk nguyên vẹn tới khi hết ngân sách)
         for rank, (ci, _) in enumerate(res, 1):
             c = chunks[ci]
+            if c.get("_ntok") is None:
+                c["_ntok"] = ntok(c["text"])
+            used += c["_ntok"]
             if doc_rank is None and c["doc"] in docs:
                 doc_rank = rank
             if hit_rank is None:
                 ct = norm(c["text"])
                 if any(len(ct) >= len(q) and fuzz.partial_ratio(q, ct) >= 90 for q in quotes):
-                    hit_rank = rank
-            if hit_rank and doc_rank:
+                    hit_rank, hit_ctx_end = rank, used
+            if (hit_rank and doc_rank) or used > max(BUDGETS):
                 break
         per_q.append(dict(id=r["id"], domain=r.get("domain", ""), hit_rank=hit_rank,
-                          doc_rank=doc_rank, doc_in_corpus=bool(docs & doc_ids_known)))
+                          doc_rank=doc_rank, hit_ctx_end=hit_ctx_end, doc_in_corpus=bool(docs & doc_ids_known)))
     t_query = time.time() - t0
 
     def agg(qs):
@@ -181,6 +213,8 @@ def evaluate(retr, chunks, rows, doc_ids_known):
         for k in (1, 5):
             o[f"doc_hit@{k}"] = sum(1 for q in qs if q["doc_rank"] and q["doc_rank"] <= k) / n
         o["mrr"] = sum(1 / q["hit_rank"] for q in qs if q["hit_rank"]) / n
+        for b in BUDGETS:
+            o[f"in_ctx@{b // 1000}k"] = sum(1 for q in qs if q["hit_ctx_end"] and q["hit_ctx_end"] <= b) / n
         return o
 
     by_dom = defaultdict(list)
@@ -229,11 +263,11 @@ def main():
             parsed[parser] = parse_corpus(parser, pdfs, a.docling_models)
         pages_by_pdf, t_parse, pinfo = parsed[parser]
 
-        ck = (parser, bool(cfg.get("prefix_title")))
+        ck = (parser, bool(cfg.get("prefix_title")), cfg.get("size", 800), cfg.get("overlap", 150))
         if ck not in chunk_memo:
             ch = []
             for pdf in pdfs:
-                ch += chunk_pages(doc_of[pdf], pages_by_pdf[pdf], 800, 150, prefix_title=ck[1])
+                ch += chunk_pages(doc_of[pdf], pages_by_pdf[pdf], ck[2], ck[3], prefix_title=ck[1])
             chunk_memo[ck] = ch
         chunks = chunk_memo[ck]
 
@@ -254,7 +288,7 @@ def main():
 
         retr = Retriever(chunks, mode=cfg["mode"], embed_model=embed_path, query_prefix=prefix,
                          device=device, rerank_model=rerank_path, rerank_n=cfg.get("rerank_n", 50),
-                         embeddings=emb)
+                         embeddings=emb, title_rrf=cfg.get("title_rrf", False))
         if cfg.get("embed"):
             if emb is None:
                 import numpy as np
@@ -275,6 +309,8 @@ def main():
         srow.update({"doc_hit@1": round(overall.get("doc_hit@1", 0), 3),
                      "doc_hit@5": round(overall.get("doc_hit@5", 0), 3),
                      "mrr": round(overall.get("mrr", 0), 3)})
+        for b in BUDGETS:
+            srow[f"in_ctx@{b // 1000}k"] = round(overall.get(f"in_ctx@{b // 1000}k", 0), 3)
         for d, v in by_dom.items():
             srow[f"{d}:n"] = v["n"]
             srow[f"{d}:recall@5"] = round(v.get("quote_recall@5", 0), 3)

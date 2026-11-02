@@ -37,7 +37,9 @@
   - **Cấm** tấn công/jailbreak LLM judge → loại ngay.
 - Tài nguyên:
   - Server chấm: 1×H100 80GB, 32 CPU, 128GB RAM. Giới hạn wall-clock tính cả load model: **1h cứng** (public: quá giờ = bài không hợp lệ);
-    private 2h **mềm** cho 100 câu: chỉ câu trả lời xong trong 2h mới được chấm → giữ thời gian public ≤ ~45 phút để private còn dư.
+    private 2h **mềm** cho 100 câu: chỉ câu trả lời xong trong 2h mới được chấm.
+    Người dùng (2/11): **ưu tiên điểm cao nhất, thời gian là phụ** → dùng gần hết ngân sách: public ≤ ~55 phút (an toàn dưới 1h cứng),
+    private = parse + 100 × (thời gian/câu) ≤ ~115 phút. Thời gian chỉ còn là tie-break.
     Zip giải nén ≤ **1GB**. Chạy lần lượt (thời gian chờ hàng đợi không tính).
     Lỗi trong `answer()` không được làm load lại model (ca thật trên Discord: reload mỗi câu → OOM toàn bài).
     Tham chiếu: `02_rag` mất ~36 phút cho cả corpus + 50 câu → parse PDF + generate là nút thắt thời gian.

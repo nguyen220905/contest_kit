@@ -21,12 +21,15 @@ Chi tiết + bằng chứng: `docs/council/round_01/SYNTHESIS.md` · nguồn cho
 - LB 2/11: 49 đội, top 72.86 / 72.38 / 70.95; **top 20 = 64.76** → cần ≥ +8 điểm so với D1.
 
 ## Lộ trình nộp từ 2/11 (mỗi ngày 1 bài, 1 thay đổi, chọn bằng số liệu phòng thí nghiệm retrieval + local)
+Người dùng 2/11: **ưu tiên điểm, thời gian là phụ** (chỉ giữ public ≤ ~55 phút dưới 1h cứng). Ngân sách/câu trên H100:
+Docling (~20 phút parse) → ~40 s/câu; PyMuPDF (~2 phút) → ~60 s/câu → đủ 2–3 lượt sinh (viết lại truy vấn, trả lời, tự kiểm).
 | Lượt | Thay đổi so với best | Bằng chứng cần có trước khi nộp | Trạng thái |
 |---|---|---|---|
-| D3 | Retrieval tốt nhất từ phòng thí nghiệm (hybrid BM25+dense / embedder khác), giữ thứ tự hạng giảm dần | quote_recall@5 tăng rõ trên sample25 (gold + nhiễu C200) | đang đo |
-| D4 | Rerank cross-encoder + ít fragment hơn (context ngắn, chính xác hơn) | recall@3 tăng; thời gian không tăng quá | chờ |
-| D5 | Prompt dùng context (system prompt hiện nói "based on your knowledge") + answer-first | local 7B + 32B (GPU thuê) không thua trên sample25 | chờ |
-| D6 | PyMuPDF thay Docling (nhanh hơn ~10×) → dồn thời gian cho rerank/context | recall không giảm; thời gian giảm | chờ |
+| D3 | Retrieval hybrid(MiniLM+BM25)+tiêu đề (lab c9), giữ thứ tự tốt nhất trước | lab MRR .366 → .470 (sample25, gold) | **sẵn sàng nộp** |
+| D4 | Prompt dùng context (system prompt hiện "based on your knowledge") + answer-first, đủ mọi vế, số + đơn vị | 32B trên sample25 (GPU thuê) không thua; local 7B tham khảo | chuẩn bị |
+| D5 | PyMuPDF thay Docling → giải phóng ~18 phút cho các lượt sinh thêm | recall không giảm (lab c1 vs c0, có nhiễu C200) | chờ |
+| D6 | Truy vấn 2 bước: Olmo viết lại câu hỏi thành từ khoá/tên paper → retrieval → trả lời | recall tăng trong lab (truy vấn viết lại) | chờ |
+| D7 | Tự kiểm: lượt 2 đối chiếu câu trả lời với fragment, sửa số/đơn vị | 32B sample25 | chờ |
 
 ## Dữ kiện từ Discord BTC (đọc 2026-10-22, chi tiết `docs/DISCORD.md`)
 - **Được bundle model bất kỳ** (sinh hay không), Olmo không bắt buộc là LLM duy nhất; "only model you may load" đã xoá. Còn lại: zip 1 GB + thời gian.

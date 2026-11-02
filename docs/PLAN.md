@@ -25,7 +25,7 @@ Người dùng 2/11: **ưu tiên điểm, thời gian là phụ** (chỉ giữ p
 Docling (~20 phút parse) → ~40 s/câu; PyMuPDF (~2 phút) → ~60 s/câu → đủ 2–3 lượt sinh (viết lại truy vấn, trả lời, tự kiểm).
 | Lượt | Thay đổi so với best | Bằng chứng cần có trước khi nộp | Trạng thái |
 |---|---|---|---|
-| D3 | Retrieval hybrid(MiniLM+BM25)+tiêu đề (lab c9), giữ thứ tự tốt nhất trước | lab MRR .366 → .470 (sample25, gold) | **sẵn sàng nộp** |
+| D3 | Retrieval hybrid(MiniLM+BM25)+tiêu đề (lab c9), giữ thứ tự tốt nhất trước | lab MRR .366 → .470 (sample25, gold) | **nộp 2/11: 64.76 (+7.62)** — best |
 | D4 | Prompt dùng context (system prompt hiện "based on your knowledge") + answer-first, đủ mọi vế, số + đơn vị | 32B trên sample25 (GPU thuê) không thua; local 7B tham khảo | chuẩn bị |
 | D5 | PyMuPDF thay Docling → giải phóng ~18 phút cho các lượt sinh thêm | recall không giảm (lab c1 vs c0, có nhiễu C200) | chờ |
 | D6 | Truy vấn 2 bước: Olmo viết lại câu hỏi thành từ khoá/tên paper → retrieval → trả lời | recall tăng trong lab (truy vấn viết lại) | chờ |

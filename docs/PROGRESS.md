@@ -8,8 +8,8 @@
 ## Điểm tốt nhất
 | Metric local | LB public | File nộp | Thí nghiệm | Ghi chú |
 |---|---|---|---|---|
-| 38.34 (sample25, gold, 7B 4-bit) | **57.14** | d1_02_safe.zip (29/10) | D1 | = baseline BTC; D2 evidence-last 49.05 (−8.09, bác bỏ) |
-LB 2/11 (49 đội): top 72.86 · top 20 = 64.76 → cần ≥ +8 điểm.
+| lab C200 in_ctx@10k .70 | **64.76** / 2088 s | d3_hybrid_title.zip (2/11) | D3 | hạng ~19–21/49 (tài khoản `snute`); D1 57.14; D2 49.05 (bác bỏ) |
+LB 2/11 (49 đội): top 72.86 · top 20 = 64.76 → cần thêm ≥ +8 để vào nhóm đầu.
 
 ## Đang làm
 - **D3 `submissions/d3_hybrid_title.zip` sẵn sàng nộp** (2/11): D1 + retrieval hybrid(MiniLM+BM25)+tiêu đề (lab MRR .366 → .470), smoke OK

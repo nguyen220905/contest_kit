@@ -11,7 +11,7 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 | D1 | 22/10 | `02-safe`: 02_rag + vá an toàn (PDF đệ quy/hoa thường, không reload khi lỗi, try/except) | 38.34 (exp-002) | — | **57.14** (nộp 29/10) | = đúng baseline BTC → server tất định, nhiễu LB với cùng code = 0 | d31608b |
 | exp-002 | 22/10 | D1 (`02-safe`) trên corpus gold (18 PDF/366 trang), sample25, 7B 4-bit | **38.34** (10/25; DONES 30.0, AI 46.67) | +25.0 vs exp-001 | — | RAG > zero-shot: +7 câu, 0 câu mất (verdict lật 7, đều lên) → tiêu chí "02 > 01" đạt | (commit này) |
 | exp-003 | 2/11 | Phòng thí nghiệm retrieval (không LLM): 12 cấu hình, sample25 (20 câu có quote), corpus gold 18 PDF | MRR c0(D1) 0.366 → c9 0.470 | — | — | hybrid(MiniLM+BM25)+tiêu đề tốt nhất trên chunk docling; rerank ms-marco tệ (0.191); n=20 → chênh 1–3 câu | (commit này) |
-| D3 | 2/11 | `d3_hybrid_title`: D1 + retrieval c9 (dsqa: chunk tách đoạn dài + tiêu đề tài liệu khi index + hybrid RRF MiniLM/BM25), giữ thứ tự tốt nhất trước | lab: r@1 .30→.40, r@20 .60→.75 | — | chờ nộp | 1 thay đổi khối retrieval; bản zip = lab (2633 chunk, cùng doc_rank) | (commit này) |
+| D3 | 2/11 | `d3_hybrid_title`: D1 + retrieval c9 (dsqa: chunk tách đoạn dài + tiêu đề tài liệu khi index + hybrid RRF MiniLM/BM25), giữ thứ tự tốt nhất trước | lab: r@1 .30→.40, r@20 .60→.75; C200 in_ctx@10k .55→.70 | **+7.62** | **64.76** / 2088 s (nộp 2/11) | XÁC NHẬN: retrieval là đòn bẩy lớn; lab dự đoán đúng hướng. Hạng ~19–21/49 | 6a55065 |
 | D2 | 22/10 | `02-evidence-last`: D1 + đảo thứ tự fragment (tốt nhất nằm cuối, trong cửa sổ 4096 của 48/64 lớp sliding của 32B) | chưa chạy | **−8.09** | **49.05** (nộp 30/10) | BÁC BỎ: 32B dựa vào fragment ĐẦU context; độ chính xác top fragment là đòn bẩy lớn | 5e6a7a8 |
 
 ## Chi tiết

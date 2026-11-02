@@ -12,6 +12,9 @@
 LB 2/11 (49 đội): top 72.86 · top 20 = 64.76 → cần ≥ +8 điểm.
 
 ## Đang làm
+- **D3 `submissions/d3_hybrid_title.zip` sẵn sàng nộp** (2/11): D1 + retrieval hybrid(MiniLM+BM25)+tiêu đề (lab MRR .366 → .470), smoke OK
+- Agent đang tải corpus nhiễu C200 → kiểm lại retrieval có nhiễu; tiếp: D4 (ít fragment/rerank tốt hơn hoặc prompt dùng context)
+- Git Windows mất (ổ E:) → commit bằng WSL git (xem memory git-via-wsl)
 - Việc: D1 `02-safe` — zip `submissions/d1_02_safe.zip` (399 MB) đã build + smoke test OK; **chờ người dùng upload Codabench**
 - Stage 2 xong (49cfbb0), Stage 3 xong (addac62), D2 zip sẵn (5e6a7a8). exp-002: D1 trên corpus gold = 38.34 (10/25) > zero-shot 13.34
 - Tiếp: Stage 3b còn lại (02 instrumented → quote_recall/in_window, oracle-chunk, evidence-last, closed-book) — mỗi lượt 25 câu local ~2.3 h → nên chạy trên GPU thuê

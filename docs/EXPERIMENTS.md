@@ -50,6 +50,8 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 ### D3 — `submissions/d3_hybrid_title`
 - D1 + đúng khối retrieval c9, dùng nguyên `dsqa/` (bundle trong zip). Bản giải nén zip: 2633 chunk và doc_rank khớp lab c9.
 - Build: `submissions/d3_hybrid_title.zip` 399 MB (giải nén 435 MB). Không thêm model (MiniLM sẵn có, BM25 = rank_bm25 trên server).
+- Smoke (bản giải nén zip, 7B 4-bit, offline, corpus gold 18 PDF): 2633 chunk, 2/2 câu có context trả lời, 0 lỗi, VRAM 11 GB.
+- Giả thuyết: top fragment chính xác hơn → +≥ 2.86 trên LB so với D1 (57.14). Bác bỏ nếu ≤ 57.14 + 1.43.
 
 ### D1 — `submissions/d1_02_safe` (bài nộp đối chứng)
 - Build: `.venv\Scripts\python submissions/d1_02_safe/build.py` → `submissions/d1_02_safe.zip` 399 MB, giải nén 435 MB

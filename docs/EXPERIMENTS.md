@@ -10,6 +10,8 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 | exp-001 | 22/10 | Harness Stage 1: 01_zero_shot, Olmo-3-7B 4-bit, sample25, 2 lượt | **13.34** (3/25; DONES 20.0, AI 6.67) | — | — | local tất định (0/25 khác chữ); 4-bit ≠ bf16 (3/3 khác chữ); 7B zero-shot trả lời chung chung, thiếu số/chi tiết | 057ff50 |
 | D1 | 22/10 | `02-safe`: 02_rag + vá an toàn (PDF đệ quy/hoa thường, không reload khi lỗi, try/except) | 38.34 (exp-002) | — | **57.14** (nộp 29/10) | = đúng baseline BTC → server tất định, nhiễu LB với cùng code = 0 | d31608b |
 | exp-002 | 22/10 | D1 (`02-safe`) trên corpus gold (18 PDF/366 trang), sample25, 7B 4-bit | **38.34** (10/25; DONES 30.0, AI 46.67) | +25.0 vs exp-001 | — | RAG > zero-shot: +7 câu, 0 câu mất (verdict lật 7, đều lên) → tiêu chí "02 > 01" đạt | (commit này) |
+| exp-003 | 2/11 | Phòng thí nghiệm retrieval (không LLM): 12 cấu hình, sample25 (20 câu có quote), corpus gold 18 PDF | MRR c0(D1) 0.366 → c9 0.470 | — | — | hybrid(MiniLM+BM25)+tiêu đề tốt nhất trên chunk docling; rerank ms-marco tệ (0.191); n=20 → chênh 1–3 câu | (commit này) |
+| D3 | 2/11 | `d3_hybrid_title`: D1 + retrieval c9 (dsqa: chunk tách đoạn dài + tiêu đề tài liệu khi index + hybrid RRF MiniLM/BM25), giữ thứ tự tốt nhất trước | lab: r@1 .30→.40, r@20 .60→.75 | — | chờ nộp | 1 thay đổi khối retrieval; bản zip = lab (2633 chunk, cùng doc_rank) | (commit này) |
 | D2 | 22/10 | `02-evidence-last`: D1 + đảo thứ tự fragment (tốt nhất nằm cuối, trong cửa sổ 4096 của 48/64 lớp sliding của 32B) | chưa chạy | **−8.09** | **49.05** (nộp 30/10) | BÁC BỎ: 32B dựa vào fragment ĐẦU context; độ chính xác top fragment là đòn bẩy lớn | 5e6a7a8 |
 
 ## Chi tiết
@@ -31,6 +33,23 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
   Theo loại: causal 50, comparative 33.3, factual 28.6, predictive 75, procedural 20.
 - Nhận xét — vì sao: có tài liệu đúng trong corpus thì RAG giúp rõ (giống LB 57 vs 29). DONES vẫn thấp (3/10): q1, q2, q4 không có
   tài liệu nguồn trong corpus; procedural (tính toán) 20% → ứng viên PoT/format. Chưa có retrieval metrics (D1 không ghi LAST_DEBUG) → cần bản instrumented.
+
+### exp-003 — phòng thí nghiệm retrieval (`eval/retrieval_eval.py`, thư viện `dsqa/`)
+- Lệnh: `.venv\Scripts\python eval/retrieval_eval.py --corpus data/corpus/gold --split sample25 --configs c0,...,c11 --run results/retr_gold_v1`
+  Hit = quote evidence nằm trong top-k chunk (rapidfuzz partial_ratio ≥ 90). 20 câu có quote → 1 câu = 0.05.
+- Kết quả (r@1 / r@3 / r@5 / r@20 / MRR):
+  c0 D1 docling+MiniLM .30/.40/.45/.60/.366 · c1 pymupdf+MiniLM .30/.35/.35/.55/.351 · c2 pymupdf+BM25 .10/.30/.55/.70/.257 ·
+  c3 pymupdf+hybrid .30/.45/.45/.65/.379 · c4 +bge-small .20/.30/.45/.70/.306 · c5 +bge-base .15/.35/.35/.75/.276 ·
+  c6 c4+rerank ms-marco .10/.15/.25/.60/.191 · c7 c4+tiêu đề .35/.50/.60/.70/.448 ·
+  c8 docling+MiniLM+tiêu đề .20/.40/.55/.75/.337 · **c9 docling+hybrid(MiniLM,BM25)+tiêu đề .40/.50/.50/.75/.470** ·
+  c10 docling+hybrid(bge-small)+tiêu đề .30/.35/.40/.70/.359 · c11 pymupdf+hybrid(MiniLM)+tiêu đề .25/.45/.55/.60/.370.
+- PyMuPDF parse 0.009 s/trang (rất nhanh so với Docling). Model: MiniLM 92 MB, bge-small 134 MB, bge-base 439 MB, ms-marco CE 92 MB.
+- Nhận xét — vì sao: BM25 bắt tên paper/thuật ngữ chính xác; gắn tiêu đề giúp câu nêu tên paper (13/15 câu AI). bge không hơn MiniLM ổn định
+  (n nhỏ). Rerank ms-marco (huấn luyện trên web search) hạ thứ hạng đoạn khoa học → loại. Corpus chỉ 18 tài liệu → cần kiểm lại với nhiễu C200.
+
+### D3 — `submissions/d3_hybrid_title`
+- D1 + đúng khối retrieval c9, dùng nguyên `dsqa/` (bundle trong zip). Bản giải nén zip: 2633 chunk và doc_rank khớp lab c9.
+- Build: `submissions/d3_hybrid_title.zip` 399 MB (giải nén 435 MB). Không thêm model (MiniLM sẵn có, BM25 = rank_bm25 trên server).
 
 ### D1 — `submissions/d1_02_safe` (bài nộp đối chứng)
 - Build: `.venv\Scripts\python submissions/d1_02_safe/build.py` → `submissions/d1_02_safe.zip` 399 MB, giải nén 435 MB

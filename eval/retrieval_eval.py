@@ -31,6 +31,12 @@ MODEL_SPECS = {
     "bge-small": ("BAAI/bge-small-en-v1.5", "st", BGE_PREFIX),
     "bge-base": ("BAAI/bge-base-en-v1.5", "st", BGE_PREFIX),
     "msmarco": ("cross-encoder/ms-marco-MiniLM-L-6-v2", "ce", ""),
+    "mxbai-xs": ("mixedbread-ai/mxbai-rerank-xsmall-v1", "ce", ""),
+    "mxbai-base": ("mixedbread-ai/mxbai-rerank-base-v1", "ce", ""),
+    "gte-rerank": ("Alibaba-NLP/gte-reranker-modernbert-base", "ce", ""),
+    "bge-rerank": ("BAAI/bge-reranker-base", "ce", ""),
+    # bản fp16 tự lưu từ gte-rerank (299 MB, để zip < 1 GB) — chỉ có ở local, không tải được theo tên
+    "gte-rerank-fp16": ("local/gte-reranker-modernbert-base-fp16", "ce", ""),
 }
 
 # Mỗi cấu hình đổi 1 thứ so với cái trước (xem docstring từng dòng).
@@ -69,6 +75,30 @@ CONFIGS = {
                 prefix_title=True, size=1200, overlap=200),
     "c19": dict(desc="c14 (pymupdf 1200/200) with bge-small", parser="pymupdf", mode="hybrid",
                 embed="bge-small", prefix_title=True, size=1200, overlap=200),
+    # 3/11: c9 (D3) + cross-encoder rerank top 50 (chunk kèm tiêu đề), đuôi danh sách giữ nguyên
+    "c20": dict(desc="c9 + rerank mxbai-xsmall top50", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, rerank="mxbai-xs", rerank_n=50),
+    "c21": dict(desc="c9 + rerank mxbai-base top50", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, rerank="mxbai-base", rerank_n=50),
+    "c22": dict(desc="c9 + rerank gte-modernbert top50", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, rerank="gte-rerank", rerank_n=50),
+    "c23": dict(desc="c9 + rerank bge-reranker-base top50", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, rerank="bge-rerank", rerank_n=50),
+    "c24": dict(desc="c9 + rerank msmarco top50", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, rerank="msmarco", rerank_n=50),
+    # Olmo làm reranker (dsqa/llm_rerank.py): lab dùng 7B 4-bit thay cho 32B của server
+    "c25": dict(desc="c9 + rerank Olmo-7B yes/no top30", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, rerank="olmo7b", rerank_n=30),
+    "c26": dict(desc="c9 + rerank Olmo-7B yes/no top50", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, rerank="olmo7b", rerank_n=50),
+    "c27": dict(desc="c22 with fp16 weights (D5)", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, rerank="gte-rerank-fp16", rerank_n=50),
+    "c28": dict(desc="c27 top20", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, rerank="gte-rerank-fp16", rerank_n=20),
+    "c29": dict(desc="c27 top100", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, rerank="gte-rerank-fp16", rerank_n=100),
+    "c30": dict(desc="c27 top200", parser="docling", mode="hybrid", embed="minilm",
+                prefix_title=True, rerank="gte-rerank-fp16", rerank_n=200),
 }
 BUDGETS = [2000, 5000, 10000]  # token budget của context (D1/D3 ghép tới 10k)
 SEARCH_K = 200
@@ -109,6 +139,22 @@ def ensure_model(repo_id, dest, kind="st"):
 def model_path(name):
     repo, kind, _ = MODEL_SPECS[name]
     return ensure_model(repo, MODELS / repo.split("/")[-1], kind)
+
+
+_LLM = {}
+
+
+def llm_reranker(device):
+    """Olmo-3-7B 4-bit (như dev_shim) làm reranker — gần đúng cho Olmo-32B trên server."""
+    if "olmo7b" not in _LLM:
+        import torch
+        from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+        from dsqa.llm_rerank import LLMReranker
+        repo = "allenai/Olmo-3-7B-Instruct"
+        model = AutoModelForCausalLM.from_pretrained(repo, device_map=device, quantization_config=BitsAndBytesConfig(
+            load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.bfloat16)).eval()
+        _LLM["olmo7b"] = LLMReranker(model, AutoTokenizer.from_pretrained(repo))
+    return _LLM["olmo7b"]
 
 
 def sha256_file(p):
@@ -284,11 +330,13 @@ def main():
                 import numpy as np
                 emb = np.load(npy)
             emb_memo_key = key
-        rerank_path = model_path(cfg["rerank"]) if cfg.get("rerank") else None
+        rr = cfg.get("rerank")
+        rerank_path = model_path(rr) if rr and rr != "olmo7b" else None
+        rerank_fn = llm_reranker(device) if rr == "olmo7b" else None
 
         retr = Retriever(chunks, mode=cfg["mode"], embed_model=embed_path, query_prefix=prefix,
                          device=device, rerank_model=rerank_path, rerank_n=cfg.get("rerank_n", 50),
-                         embeddings=emb, title_rrf=cfg.get("title_rrf", False))
+                         embeddings=emb, title_rrf=cfg.get("title_rrf", False), rerank_fn=rerank_fn)
         if cfg.get("embed"):
             if emb is None:
                 import numpy as np

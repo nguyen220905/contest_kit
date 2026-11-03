@@ -14,6 +14,8 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 | D3 | 2/11 | `d3_hybrid_title`: D1 + retrieval c9 (dsqa: chunk tách đoạn dài + tiêu đề tài liệu khi index + hybrid RRF MiniLM/BM25), giữ thứ tự tốt nhất trước | lab: r@1 .30→.40, r@20 .60→.75; C200 in_ctx@10k .55→.70 | **+7.62** | **64.76** / 2088 s (nộp 2/11) | XÁC NHẬN: retrieval là đòn bẩy lớn; lab dự đoán đúng hướng. Hạng ~19–21/49 | 6a55065 |
 | exp-004/005 | 2/11 | Local corpus gold, 7B 4-bit: D3 (exp-004) vs D4 (exp-005) | D3 **35.0** (9/25) · D4 **26.66** (7/25) | D4 −2 câu, 0 câu được | — | Local dự đoán ĐÚNG hướng D4 tụt (LB −10.95). Lưu ý: local gold (không nhiễu) KHÔNG thấy lợi của retrieval (D3 9/25 ≈ D1 10/25, LB +7.62) | (commit này) |
 | D4 | 3/11 | `d4_context_prompt`: D3 + system prompt mới (dùng fragment làm nguồn chính, tiền đề sai, answer-first) + user turn `context + "Question: "` | 26.66 (exp-005) | **−10.95** | **53.81** (nộp 3/11) | BÁC BỎ: prompt answer-first/"step" làm câu trả lời dài hơn (+157 token) và sai số ở bước suy luận (local: lưu lượng 32 L/s thay vì 97.5; trần ⌈L/3⌉=171 thay vì 170). Giữ nguyên prompt 02_rag | — |
+| exp-006 | 3/11 | Lab rerank (cross-encoder top-N trên c9 Docling, chunk kèm tiêu đề): mxbai-xs / mxbai-base / gte-modernbert / bge-reranker-base / msmarco; gte top 20/50/100/200 | C200 MRR c9 .407 → **c29 gte top100 .535**; in_ctx@2k/5k/10k .60/.80/.85 → .75/.90/.95 · gold MRR .477 → .584 | — | — | Chỉ gte-reranker-modernbert thắng (mxbai/bge/msmarco hoà hoặc tệ hơn). top100 > top50 > top20; top200 ≈ top100. fp16 = fp32 (lệch điểm ~3e-4) | (commit này) |
+| D5 | 3/11 | `d5_gte_rerank`: D3 + rerank top-100 bằng gte-reranker-modernbert-base fp16 (GPU), đuôi danh sách giữ thứ tự hybrid; prompt/generation giữ nguyên | lab c29 (trên) | chờ | chờ nộp | Giả thuyết: top fragment đúng hơn → 32B (bám fragment đầu) trả lời đúng hơn. Bác bỏ nếu LB ≤ 64.76 + 1.43 | (commit này) |
 | D2 | 22/10 | `02-evidence-last`: D1 + đảo thứ tự fragment (tốt nhất nằm cuối, trong cửa sổ 4096 của 48/64 lớp sliding của 32B) | chưa chạy | **−8.09** | **49.05** (nộp 30/10) | BÁC BỎ: 32B dựa vào fragment ĐẦU context; độ chính xác top fragment là đòn bẩy lớn | 5e6a7a8 |
 
 ## Chi tiết
@@ -64,6 +66,14 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 - Vì sao: Docling tách đoạn sạch hơn PyMuPDF → c9 Docling vượt mọi cấu hình PyMuPDF (.85 vs .75 @10k). Chunk 1200 không thêm gì trên Docling
   (MRR giảm) → bỏ ý D5 "chunk 1200". Đổi sang PyMuPDF mất ~1/10 câu evidence → chỉ đáng làm nếu thiếu thời gian, không vì điểm.
 - Giới hạn trên còn lại: 15% câu evidence không vào context 10k; 40% câu evidence không nằm trong 2k token đầu (vùng model bám nhiều nhất, xem D2).
+
+### D5 — `submissions/d5_gte_rerank`
+- Thay đổi so với D3: `Retriever(..., rerank_model=rerank_model/, rerank_n=100, rerank_device="cuda")`; reranker lỗi khi load → thứ tự hybrid D3;
+  lỗi khi chấm → tắt rerank cho các câu sau. Vá `dsqa/retrieve.py`: rerank giữ phần đuôi sau top-N (trước đây bị cắt còn N kết quả)
+  và chấm trên chunk kèm tiêu đề.
+- Build: zip 674 MB, giải nén 737 MB (< 1 GB). Smoke (bản giải nén, offline, corpus gold): 2633 chunk = D3, CrossEncoder trên cuda,
+  hit_rank khớp lab c29 20/20, MRR .584. Không chạy được LLM local (GPU bị dự án khác chiếm 13.4/16 GB) — phần sinh giống hệt D3.
+- Thời gian dự kiến: D3 2088 s + ~1 s/câu rerank trên H100.
 
 ### D3 — `submissions/d3_hybrid_title`
 - D1 + đúng khối retrieval c9, dùng nguyên `dsqa/` (bundle trong zip). Bản giải nén zip: 2633 chunk và doc_rank khớp lab c9.

@@ -32,6 +32,8 @@ Docling (~20 phút parse) → ~40 s/câu; PyMuPDF (~2 phút) → ~60 s/câu → 
 | D4 | Prompt dùng context + answer-first, đủ mọi vế, số + đơn vị | local 7B: 7/25 vs D3 9/25 (đã báo tụt, nộp trước khi có số) | **nộp 3/11: 53.81 (−10.95) — bác bỏ** |
 | D5 | ~~PyMuPDF thay Docling~~ | lab C200: Docling c9 in_ctx@10k .85 > PyMuPDF .75 → mất evidence | **loại** (chỉ dùng nếu thiếu thời gian) |
 | — | ~~Chunk 1200/200~~ | lab C200 Docling c18 = c9 (.80/.85), MRR thấp hơn | **loại** |
+| D5 | Rerank top-100 bằng gte-reranker-modernbert-base fp16 | lab c29: C200 MRR .407 → .535, in_ctx@2k .60 → .75; gold .477 → .584 | **zip sẵn 3/11** `submissions/d5_gte_rerank.zip` |
+| D6? | Olmo làm reranker (dùng lại 32B, Yes/No logit) thay/bổ sung gte | lab c25/c26 bằng 7B 4-bit (chờ GPU local rảnh) | chờ |
 | D6 | Truy vấn 2 bước: Olmo viết lại câu hỏi thành từ khoá/tên paper → retrieval → trả lời | recall tăng trong lab (truy vấn viết lại) | chờ |
 | D7 | Tự kiểm: lượt 2 đối chiếu câu trả lời với fragment, sửa số/đơn vị | 32B sample25 | chờ |
 

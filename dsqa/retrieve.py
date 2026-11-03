@@ -19,11 +19,13 @@ class Retriever:
     rerank_model: CrossEncoder path/id or None; rerank_n: top-N candidates reranked."""
 
     def __init__(self, chunks, mode="dense", embed_model=None, query_prefix="", device="cpu",
-                 rerank_model=None, rerank_n=50, embeddings=None, title_rrf=False, title_docs=3):
+                 rerank_model=None, rerank_n=50, embeddings=None, title_rrf=False, title_docs=3,
+                 rerank_fn=None, rerank_device=None):
         if mode not in ("dense", "bm25", "hybrid"):
             raise ValueError(f"unknown mode {mode!r}")
         self.chunks, self.mode, self.query_prefix = chunks, mode, query_prefix
         self.rerank_n = rerank_n
+        self.rerank_fn = rerank_fn  # (question, texts) -> scores, vd dsqa.llm_rerank.LLMReranker; thay cho CrossEncoder
         # title_rrf (hybrid only): 3rd RRF list = chunks of the `title_docs` documents whose title best
         # matches the question (BM25 over document titles), each doc's chunks in dense order
         self.title_rrf, self.title_docs = title_rrf and mode == "hybrid", title_docs
@@ -63,7 +65,7 @@ class Retriever:
                 from sentence_transformers import CrossEncoder
             except ImportError as e:
                 raise ImportError("CrossEncoder unavailable in sentence_transformers") from e
-            self.cross = CrossEncoder(str(rerank_model), device=device)
+            self.cross = CrossEncoder(str(rerank_model), device=rerank_device or device)
 
     def _dense(self, q):
         qe = self.embedder.encode([self.query_prefix + q], normalize_embeddings=True,
@@ -82,7 +84,8 @@ class Retriever:
     def search(self, question, k=10):
         if not self.chunks:
             return []
-        need = max(k, self.rerank_n) if self.cross else k
+        rerank = self.rerank_fn is not None or self.cross is not None
+        need = max(k, self.rerank_n) if rerank else k
         if self.mode == "dense":
             s = self._dense(question)
             top = self._top(s, need)
@@ -108,9 +111,11 @@ class Retriever:
                 for r, i in enumerate(lst):
                     fused[int(i)] = fused.get(int(i), 0.0) + 1.0 / (60 + r + 1)
             res = sorted(fused.items(), key=lambda x: -x[1])[:need]
-        if self.cross and res:
+        if rerank and res:
+            # rerank top-N (chunk kèm tiêu đề nếu có); phần sau top-N giữ nguyên thứ tự để bộ ghép context không bị hụt
             cand = res[: self.rerank_n]
-            sc = self.cross.predict([(question, self.chunks[i]["text"]) for i, _ in cand],
-                                    show_progress_bar=False)
-            res = sorted(((i, float(x)) for (i, _), x in zip(cand, sc)), key=lambda x: -x[1])
+            texts = [self.texts[i] for i, _ in cand]
+            sc = (self.rerank_fn(question, texts) if self.rerank_fn is not None else
+                  self.cross.predict([(question, t) for t in texts], show_progress_bar=False))
+            res = sorted(((i, float(x)) for (i, _), x in zip(cand, sc)), key=lambda x: -x[1]) + res[self.rerank_n:]
         return res[:k]

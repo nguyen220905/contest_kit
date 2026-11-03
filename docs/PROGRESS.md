@@ -11,11 +11,13 @@
 | lab C200 Docling in_ctx@10k .85, MRR .407 | **64.76** / 2088 s | d3_hybrid_title.zip (2/11) | D3 | tài khoản `snute`; D1 57.14 · D2 49.05 · D4 53.81 (đều thua) |
 
 ## Đang làm
-- Lab rerank trên C200 Docling: c9 (D3) vs c20–c24 (mxbai-xs / mxbai-base / gte-modernbert / bge-reranker-base / msmarco, top 50)
-  → `results/retr_c200_rerank/summary.csv`. Thắng nếu MRR + in_ctx@2k tăng rõ (≥ 2/20 câu) → D5 = D3 + rerank (prompt giữ nguyên).
+- **D5 `submissions/d5_gte_rerank.zip` (674 MB) sẵn sàng nộp**: D3 + rerank top-100 gte-reranker-modernbert-base fp16
+  (lab c29: C200 MRR .407 → .535, in_ctx@2k .60 → .75, @10k .85 → .95). Smoke retrieval khớp lab 20/20. Chờ người dùng upload.
+- Chờ GPU local rảnh (Docker/WSL dự án khác chiếm 13.4 GB): lab c25/c26 Olmo-7B làm reranker.
 - Git Windows mất (ổ E:) → commit bằng WSL git (memory git-via-wsl).
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
+- 2026-11-03 — exp-006 lab rerank: chỉ gte-reranker-modernbert thắng (mxbai/bge/msmarco không); top100 tốt nhất → D5 build + smoke
 - 2026-11-03 — D4 (prompt mới) LB **53.81 (−10.95)** → bác bỏ; local 7B gold đã báo trước (7/25 vs D3 9/25). Sửa judge: verdict bằng regex khi JSON hỏng vì LaTeX
 - 2026-11-02 — Lab Docling C200: c9 .60/.80/.85 (in_ctx@2k/5k/10k) > PyMuPDF .75 @10k; chunk 1200 không thêm gì → loại D5 PyMuPDF/chunk 1200
 - 2026-11-02 — D3 LB **64.76 (+7.62)**: retrieval hybrid MiniLM+BM25 + tiêu đề (lab dự đoán đúng)
@@ -24,9 +26,9 @@
 - 2026-10-22 — Stage 1–3: harness (`eval/run_pipeline.py`, `evaluate.py`, judge DeepSeek), corpus gold 18 PDF + nhiễu 182 PDF, sample25 split
 
 ## Bước tiếp theo (1–3 việc, có lệnh chạy)
-1. Đọc lab rerank → nếu thắng: build `submissions/d5_rerank` (D3 + CrossEncoder, kiểm zip giải nén < 1 GB) + smoke
-   `.venv\Scripts\python eval/run_pipeline.py --submission data/work/unzip/d5_rerank --split sample25 --run results/s1_d5_smoke --offline --limit 2`
-2. Thử Olmo làm reranker (LLM chấm liên quan top-30 chunk) trong lab bằng 7B — mô-đun "CI" cho paper
+1. Người dùng nộp D5 → ghi LB vào EXPERIMENTS. (Khi GPU rảnh: smoke đủ LLM
+   `.venv\Scripts\python eval/run_pipeline.py --submission data/work/unzip/d5_gte_rerank --split sample25 --run results/s1_d5_smoke --offline --limit 2`)
+2. Lab c25/c26: Olmo-7B làm reranker (`dsqa/llm_rerank.py`) — so với c29; mô-đun "CI" cho paper
 3. Thuê GPU (RTX PRO 6000 96 GB) để chạy 32B thật: đổi generation chỉ nộp khi 32B trên sample25 không thua
 
 ## Vướng mắc / câu hỏi mở

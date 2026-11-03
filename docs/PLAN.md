@@ -19,6 +19,9 @@ Chi tiết + bằng chứng: `docs/council/round_01/SYNTHESIS.md` · nguồn cho
   (nhưng vẫn tránh tune theo 50 câu: private chấm đủ 100 câu).
 - D2 (evidence-last) = **49.05 (−8.09)** → Olmo-32B dựa vào fragment ĐẦU context; độ chính xác top fragment + bớt nhiễu là đòn bẩy lớn.
 - LB 2/11: 49 đội, top 72.86 / 72.38 / 70.95; **top 20 = 64.76** → cần ≥ +8 điểm so với D1.
+- D3 = **64.76** (retrieval, +7.62) · D4 = **53.81** (prompt, −10.95) → 32B rất nhạy với prompt; giữ nguyên prompt/generation của 02_rag,
+  chỉ đổi khâu tìm/xếp fragment. Cổng trước khi nộp: đổi generation → chạy local gold 7B (đã đoán đúng D4 tụt) + 32B nếu có GPU;
+  đổi retrieval → lab C200 Docling (đã đoán đúng D3; local gold không thấy được lợi của retrieval).
 
 ## Lộ trình nộp từ 2/11 (mỗi ngày 1 bài, 1 thay đổi, chọn bằng số liệu phòng thí nghiệm retrieval + local)
 Người dùng 2/11: **ưu tiên điểm, thời gian là phụ** (chỉ giữ public ≤ ~55 phút dưới 1h cứng). Ngân sách/câu trên H100:
@@ -26,8 +29,9 @@ Docling (~20 phút parse) → ~40 s/câu; PyMuPDF (~2 phút) → ~60 s/câu → 
 | Lượt | Thay đổi so với best | Bằng chứng cần có trước khi nộp | Trạng thái |
 |---|---|---|---|
 | D3 | Retrieval hybrid(MiniLM+BM25)+tiêu đề (lab c9), giữ thứ tự tốt nhất trước | lab MRR .366 → .470 (sample25, gold) | **nộp 2/11: 64.76 (+7.62)** — best |
-| D4 | Prompt dùng context (system prompt hiện "based on your knowledge") + answer-first, đủ mọi vế, số + đơn vị | 32B trên sample25 (GPU thuê) không thua; local 7B tham khảo | chuẩn bị |
-| D5 | PyMuPDF thay Docling → giải phóng ~18 phút cho các lượt sinh thêm | recall không giảm (lab c1 vs c0, có nhiễu C200) | chờ |
+| D4 | Prompt dùng context + answer-first, đủ mọi vế, số + đơn vị | local 7B: 7/25 vs D3 9/25 (đã báo tụt, nộp trước khi có số) | **nộp 3/11: 53.81 (−10.95) — bác bỏ** |
+| D5 | ~~PyMuPDF thay Docling~~ | lab C200: Docling c9 in_ctx@10k .85 > PyMuPDF .75 → mất evidence | **loại** (chỉ dùng nếu thiếu thời gian) |
+| — | ~~Chunk 1200/200~~ | lab C200 Docling c18 = c9 (.80/.85), MRR thấp hơn | **loại** |
 | D6 | Truy vấn 2 bước: Olmo viết lại câu hỏi thành từ khoá/tên paper → retrieval → trả lời | recall tăng trong lab (truy vấn viết lại) | chờ |
 | D7 | Tự kiểm: lượt 2 đối chiếu câu trả lời với fragment, sửa số/đơn vị | 32B sample25 | chờ |
 

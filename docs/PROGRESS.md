@@ -1,58 +1,44 @@
-# PROGRESS — cập nhật: 2026-10-22 bởi claude
+# PROGRESS — cập nhật: 2026-11-03 bởi claude
 > File này là "bộ nhớ" của dự án. Hook SessionStart tự nạp nó sau mỗi lần mở phiên / compact / clear.
 > Giữ ngắn (< 80 dòng). Ghi đè thay vì viết thêm.
 
 ## Mục tiêu hiện tại
-- Vào top 20 Public LB (ngưỡng hiện 59.05; top 69.05) trước 2026-10-26, rồi đẩy lên ≥ 69 với mô-đun CI cho paper Phase 2.
+- Người dùng (2/11): **điểm cao nhất, thời gian là phụ** (public ≤ ~55 phút dưới 1h cứng). LB 2/11: top 72.86, top 20 = 64.76.
 
 ## Điểm tốt nhất
 | Metric local | LB public | File nộp | Thí nghiệm | Ghi chú |
 |---|---|---|---|---|
-| lab C200 in_ctx@10k .70 | **64.76** / 2088 s | d3_hybrid_title.zip (2/11) | D3 | hạng ~19–21/49 (tài khoản `snute`); D1 57.14; D2 49.05 (bác bỏ) |
-LB 2/11 (49 đội): top 72.86 · top 20 = 64.76 → cần thêm ≥ +8 để vào nhóm đầu.
+| lab C200 Docling in_ctx@10k .85, MRR .407 | **64.76** / 2088 s | d3_hybrid_title.zip (2/11) | D3 | tài khoản `snute`; D1 57.14 · D2 49.05 · D4 53.81 (đều thua) |
 
 ## Đang làm
-- **D3 `submissions/d3_hybrid_title.zip` sẵn sàng nộp** (2/11): D1 + retrieval hybrid(MiniLM+BM25)+tiêu đề (lab MRR .366 → .470), smoke OK
-- Agent đang tải corpus nhiễu C200 → kiểm lại retrieval có nhiễu; tiếp: D4 (ít fragment/rerank tốt hơn hoặc prompt dùng context)
-- Git Windows mất (ổ E:) → commit bằng WSL git (xem memory git-via-wsl)
-- Việc: D1 `02-safe` — zip `submissions/d1_02_safe.zip` (399 MB) đã build + smoke test OK; **chờ người dùng upload Codabench**
-- Stage 2 xong (49cfbb0), Stage 3 xong (addac62), D2 zip sẵn (5e6a7a8). exp-002: D1 trên corpus gold = 38.34 (10/25) > zero-shot 13.34
-- Tiếp: Stage 3b còn lại (02 instrumented → quote_recall/in_window, oracle-chunk, evidence-last, closed-book) — mỗi lượt 25 câu local ~2.3 h → nên chạy trên GPU thuê
-- `data/splits/sample25.jsonl` đã ghi 22/10 (người dùng cho phép): reference_short đã duyệt + evidence (17 found / 3 partial / 5 not_found)
+- Lab rerank trên C200 Docling: c9 (D3) vs c20–c24 (mxbai-xs / mxbai-base / gte-modernbert / bge-reranker-base / msmarco, top 50)
+  → `results/retr_c200_rerank/summary.csv`. Thắng nếu MRR + in_ctx@2k tăng rõ (≥ 2/20 câu) → D5 = D3 + rerank (prompt giữ nguyên).
+- Git Windows mất (ổ E:) → commit bằng WSL git (memory git-via-wsl).
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
-- 2026-10-22 — exp-002: D1 RAG trên corpus gold, sample25, 7B 4-bit → 38.34 (DONES 30, AI 46.7), +7 câu so với zero-shot
-- 2026-10-22 — Stage 3: corpus gold 18 PDF/366 trang, 20/25 câu mẫu có quote xác nhận
-- 2026-10-22 — Stage 2: judge DeepSeek judge-v2, 4/4 test hiệu chỉnh PASS; exp-001 zero-shot 7B = 13.34
-- 2026-10-22 — D1 build + smoke (bản giải nén zip, offline, 2 PDF): 3/3 câu OK; 4-bit vs bf16 3/3 câu khác chữ (exp-001)
-- 2026-10-22 — Council round_06 (đủ 8 model) chấm STAGES v2: TB 6.8/10, trung vị 7, "sửa nhỏ rồi làm" → STAGES v3 (D1 nộp sớm, Stage 5 hoãn, Stage 3b thêm oracle-chunk/evidence-last)
-- 2026-10-22 — Stage 1 harness: 01_zero_shot 7B 4-bit sample25 ×2 → local tất định (0/25 khác chữ), token p50/p95 597/1738, 77–89 s/câu
-- 2026-10-22 — Council round_02 chấm plan P2+P3: chỉ DeepSeek trả lời (key OpenRouter HẾT HẠN, 401) → 5/10 và 6/10, "sửa nhỏ rồi làm"; STAGES.md v2
-- 2026-10-22 — Đọc Discord BTC → `docs/DISCORD.md`: được bundle model bất kỳ (kể cả LLM khác), judge tất định, private 2h là giới hạn mềm, corpus không công bố kích thước
-- 2026-10-15 — P1: `.venv` khớp server (torch 2.8.0+cu128 thấy sm_120, transformers 5.17.0, pip check sạch; bỏ triton vì chỉ có Linux). Smoke test Olmo-3-7B: 4bit 9 tok/s · 4.9 GiB; bf16 11 tok/s · 13.6 GiB; 8bit 2.8 tok/s
-- 2026-10-15 — Council round_01 (8 model vòng 1; vòng 2 chỉ deepseek do OpenRouter hết hạn mức ngày) → SYNTHESIS + REFERENCES (40 nguồn đã mở), PLAN cập nhật P0–P6
-- 2026-10-15 — Chép kit v10, clone starter kit BTC vào `starter_kit/` (@5e596be), điền AGENTS.md mục 1
+- 2026-11-03 — D4 (prompt mới) LB **53.81 (−10.95)** → bác bỏ; local 7B gold đã báo trước (7/25 vs D3 9/25). Sửa judge: verdict bằng regex khi JSON hỏng vì LaTeX
+- 2026-11-02 — Lab Docling C200: c9 .60/.80/.85 (in_ctx@2k/5k/10k) > PyMuPDF .75 @10k; chunk 1200 không thêm gì → loại D5 PyMuPDF/chunk 1200
+- 2026-11-02 — D3 LB **64.76 (+7.62)**: retrieval hybrid MiniLM+BM25 + tiêu đề (lab dự đoán đúng)
+- 2026-11-02 — D2 evidence-last 49.05 (−8.09) → 32B bám fragment ĐẦU context
+- 2026-10-29 — D1 02-safe 57.14 = baseline BTC → server tất định
+- 2026-10-22 — Stage 1–3: harness (`eval/run_pipeline.py`, `evaluate.py`, judge DeepSeek), corpus gold 18 PDF + nhiễu 182 PDF, sample25 split
 
 ## Bước tiếp theo (1–3 việc, có lệnh chạy)
-1. P0 (người dùng): đăng ký trước 1/11
-2. P2 + P3: eval harness (judge nhị phân, predictions.csv) + corpus dev nguồn mở; kiểm môi trường: `.venv\Scripts\python scripts/smoke_test.py --n 3`
-3. P4: cải tiến baseline → rồi mới thuê H100 (P1b) để đo 32B trước khi nộp
+1. Đọc lab rerank → nếu thắng: build `submissions/d5_rerank` (D3 + CrossEncoder, kiểm zip giải nén < 1 GB) + smoke
+   `.venv\Scripts\python eval/run_pipeline.py --submission data/work/unzip/d5_rerank --split sample25 --run results/s1_d5_smoke --offline --limit 2`
+2. Thử Olmo làm reranker (LLM chấm liên quan top-30 chunk) trong lab bằng 7B — mô-đun "CI" cho paper
+3. Thuê GPU (RTX PRO 6000 96 GB) để chạy 32B thật: đổi generation chỉ nộp khi 32B trên sample25 không thua
 
 ## Vướng mắc / câu hỏi mở
-- Đã rõ (BTC 15/10): dev dùng model cùng kiến trúc (Olmo-3-7B-Instruct), cùng transformers 5.17.0. Ngân sách thuê GPU thoải mái. Dữ liệu thêm chỉ từ nguồn mở.
-- Đã rõ (Discord 19/10): được bundle model bất kỳ, kể cả LLM khác Olmo — chỉ giới hạn zip 1 GB + thời gian.
-- GPU thuê: EzyCloudX Docker (không có H100/A100-80GB) → đề xuất 1x RTX PRO 6000 Blackwell 95 GB (105k CP/giờ); quy đổi thời gian bằng 02_rag vs LB 2080 s.
-- `data/splits/**` vẫn được hook bảo vệ; sample25.jsonl ghi 1 lần qua `scripts/build_sample25_split.py` (người dùng cho phép 22/10).
-- Codabench (129.175.8.21) từ chối kết nối 22/10 tối (cả từ ngoài) → chưa nộp được D1. Upload zip 399 MB phải do người dùng bấm (tool upload ≤ 10 MB).
-- Domain nào có 15 câu trong public (đoán DONES theo tỉ lệ mẫu, chưa chắc).
-- Key OpenRouter **hết hạn** (22/10, HTTP 401) → 7/8 model hội đồng + Perplexity không chạy được; người dùng cần thay key trong `tools/.env`.
-  Trước đó key còn giới hạn $7/ngày → khi thay nên nâng hạn mức.
+- GPU thuê: chưa thuê — mọi thay đổi khâu sinh câu trả lời (prompt, tự kiểm) đang mù với 32B (D2, D4 đều tụt 8–11 điểm).
+- Domain nào có 15 câu trong public chưa rõ.
 
 ## Bẫy đã biết (đừng lặp lại)
+- **Không đổi prompt/generation khi chưa có số**: D4 tụt 10.95. Local gold 7B đoán đúng hướng đổi generation → chờ local xong rồi mới nộp.
+- Local gold (18 PDF, không nhiễu) KHÔNG thấy lợi của retrieval (D3 ≈ D1 local nhưng +7.62 LB) → retrieval phải đo bằng lab C200.
+- 32B bám fragment ĐẦU (D2) → mọi thay đổi xếp hạng phải tăng độ chính xác top fragment (MRR, in_ctx@2k).
 - Đừng ép "chỉ dùng số trong context": gold dùng cả kiến thức chuẩn (ln2, khối lượng riêng Li) và có câu tiền đề sai.
-- Đừng chọn model > 1 GB để bundle (BGE-M3, bge-reranker-v2-m3). Đừng trông vào Docling table structure trên server.
-- Một lượt nộp = 1 ngày: luôn chạy smoke test + kiểm zip giải nén < 900 MB trước khi nộp.
-- bnb 8-bit (LLM.int8) rất chậm (2.8 tok/s) → dev dùng 4-bit. Tốc độ/bộ nhớ của 7B (MHA 32/32) KHÔNG suy ra được 32B (GQA 40/8).
-- `triton` không có wheel Windows → venv local thiếu triton; kiểm lại trên Linux (H100 thuê) trước khi nộp.
-- GPU local dùng chung với dự án khác (project_r2ai, UNDERWATER-IMAGING, project_pnpl) → thời gian local nhiễu; KHÔNG kill tiến trình của dự án khác.
-- Olmo-32B: 48/64 lớp sliding 4096 → fragment đặt đầu context dài bị 48 lớp "không thấy" khi sinh (giả thuyết D2 evidence-last).
+- Zip giải nén ≤ 1 GB (D3 đang 435 MB). Không dùng BGE-M3 / bge-reranker-v2-m3. Docling table structure không chạy trên server.
+- bnb 8-bit rất chậm → dev 4-bit. Tốc độ/bộ nhớ 7B (MHA) không suy ra 32B (GQA 40/8).
+- GPU local dùng chung với dự án khác → KHÔNG kill tiến trình của dự án khác; thời gian local nhiễu.
+- Judge local: reason chứa LaTeX làm JSON hỏng → đã có fallback regex (eval/judge.py).

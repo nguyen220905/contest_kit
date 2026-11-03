@@ -7,6 +7,7 @@ import csv
 import hashlib
 import json
 import os
+import re
 import sys
 import threading
 import time
@@ -165,6 +166,11 @@ def judge(question, reference, answer, provider="deepseek"):
         v = str((obj or {}).get("verdict", "")).strip().lower()
         if v in ("correct", "incorrect"):
             return {"verdict": v == "correct", "reason": str(obj.get("reason", ""))}
+        # JSON hỏng do LaTeX trong reason (vd "\(" là escape không hợp lệ) → đọc verdict bằng regex
+        m = re.findall(r'"verdict"\s*:\s*"(correct|incorrect)"', out)
+        if m:
+            r = re.findall(r'"reason"\s*:\s*"(.*?)"\s*}', out, re.S)
+            return {"verdict": m[-1] == "correct", "reason": r[-1] if r else "regex_parse"}
     return {"verdict": False, "reason": "parse_error"}
 
 

@@ -12,6 +12,8 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 | exp-002 | 22/10 | D1 (`02-safe`) trên corpus gold (18 PDF/366 trang), sample25, 7B 4-bit | **38.34** (10/25; DONES 30.0, AI 46.67) | +25.0 vs exp-001 | — | RAG > zero-shot: +7 câu, 0 câu mất (verdict lật 7, đều lên) → tiêu chí "02 > 01" đạt | (commit này) |
 | exp-003 | 2/11 | Phòng thí nghiệm retrieval (không LLM): 12 cấu hình, sample25 (20 câu có quote), corpus gold 18 PDF | MRR c0(D1) 0.366 → c9 0.470 | — | — | hybrid(MiniLM+BM25)+tiêu đề tốt nhất trên chunk docling; rerank ms-marco tệ (0.191); n=20 → chênh 1–3 câu | (commit này) |
 | D3 | 2/11 | `d3_hybrid_title`: D1 + retrieval c9 (dsqa: chunk tách đoạn dài + tiêu đề tài liệu khi index + hybrid RRF MiniLM/BM25), giữ thứ tự tốt nhất trước | lab: r@1 .30→.40, r@20 .60→.75; C200 in_ctx@10k .55→.70 | **+7.62** | **64.76** / 2088 s (nộp 2/11) | XÁC NHẬN: retrieval là đòn bẩy lớn; lab dự đoán đúng hướng. Hạng ~19–21/49 | 6a55065 |
+| exp-004/005 | 2/11 | Local corpus gold, 7B 4-bit: D3 (exp-004) vs D4 (exp-005) | D3 **35.0** (9/25) · D4 **26.66** (7/25) | D4 −2 câu, 0 câu được | — | Local dự đoán ĐÚNG hướng D4 tụt (LB −10.95). Lưu ý: local gold (không nhiễu) KHÔNG thấy lợi của retrieval (D3 9/25 ≈ D1 10/25, LB +7.62) | (commit này) |
+| D4 | 3/11 | `d4_context_prompt`: D3 + system prompt mới (dùng fragment làm nguồn chính, tiền đề sai, answer-first) + user turn `context + "Question: "` | 26.66 (exp-005) | **−10.95** | **53.81** (nộp 3/11) | BÁC BỎ: prompt answer-first/"step" làm câu trả lời dài hơn (+157 token) và sai số ở bước suy luận (local: lưu lượng 32 L/s thay vì 97.5; trần ⌈L/3⌉=171 thay vì 170). Giữ nguyên prompt 02_rag | — |
 | D2 | 22/10 | `02-evidence-last`: D1 + đảo thứ tự fragment (tốt nhất nằm cuối, trong cửa sổ 4096 của 48/64 lớp sliding của 32B) | chưa chạy | **−8.09** | **49.05** (nộp 30/10) | BÁC BỎ: 32B dựa vào fragment ĐẦU context; độ chính xác top fragment là đòn bẩy lớn | 5e6a7a8 |
 
 ## Chi tiết
@@ -55,6 +57,13 @@ best mới chỉ khi Δ ≥ max(2.86, |D1 − 57.14|) (xem STAGES.md "Ngưỡng 
 - Nhận xét — vì sao: có nhiễu, hybrid+tiêu đề vẫn đưa evidence vào context 10k ở 70% câu (dense 55%) → hướng D3 đúng. Chunk lớn hơn (1200)
   giữ đoạn bằng chứng liền mạch → in_ctx@5k +0.10. Định tuyến theo tiêu đề (RRF list 3) và chunk nhỏ làm tệ → loại.
   Còn ~25% câu evidence không vào được 10k token → giới hạn trên của pipeline hiện tại. Docling trên C200 (c0/c9/c18) đang chạy.
+
+### exp-003c — Docling trên C200 (cấu hình thật của D3), 20 câu có quote
+- in_ctx@2k/@5k/@10k / MRR: c0 D1 dense .50/.60/.60/.301 · **c9 D3 .60/.80/.85/.407** · c18 c9+chunk 1200/200 .55/.80/.85/.333 ·
+  c19 pymupdf 1200/200 + bge-small .45/.65/.75/.327.
+- Vì sao: Docling tách đoạn sạch hơn PyMuPDF → c9 Docling vượt mọi cấu hình PyMuPDF (.85 vs .75 @10k). Chunk 1200 không thêm gì trên Docling
+  (MRR giảm) → bỏ ý D5 "chunk 1200". Đổi sang PyMuPDF mất ~1/10 câu evidence → chỉ đáng làm nếu thiếu thời gian, không vì điểm.
+- Giới hạn trên còn lại: 15% câu evidence không vào context 10k; 40% câu evidence không nằm trong 2k token đầu (vùng model bám nhiều nhất, xem D2).
 
 ### D3 — `submissions/d3_hybrid_title`
 - D1 + đúng khối retrieval c9, dùng nguyên `dsqa/` (bundle trong zip). Bản giải nén zip: 2633 chunk và doc_rank khớp lab c9.

@@ -22,6 +22,8 @@ Chi tiết + bằng chứng: `docs/council/round_01/SYNTHESIS.md` · nguồn cho
 - D3 = **64.76** (retrieval, +7.62) · D4 = **53.81** (prompt, −10.95) → 32B rất nhạy với prompt; giữ nguyên prompt/generation của 02_rag,
   chỉ đổi khâu tìm/xếp fragment. Cổng trước khi nộp: đổi generation → chạy local gold 7B (đã đoán đúng D4 tụt) + 32B nếu có GPU;
   đổi retrieval → lab C200 Docling (đã đoán đúng D3; local gold không thấy được lợi của retrieval).
+- D5 = **60.48** dù lab tốt hơn rõ → lab 20 câu (quote trong context) không đủ đoán LB. Nhiễu khi so 2 biến thể trên 50 câu public:
+  ~12% câu lật (đo local D3/D4) → sd chênh lệch ≈ 5 điểm → chỉ |Δ| ≳ 8–10 mới đáng tin. Cần tập dev lớn hơn (≥ 100 câu) + chạy 32B thật.
 
 ## Lộ trình nộp từ 2/11 (mỗi ngày 1 bài, 1 thay đổi, chọn bằng số liệu phòng thí nghiệm retrieval + local)
 Người dùng 2/11: **ưu tiên điểm, thời gian là phụ** (chỉ giữ public ≤ ~55 phút dưới 1h cứng). Ngân sách/câu trên H100:
@@ -32,7 +34,8 @@ Docling (~20 phút parse) → ~40 s/câu; PyMuPDF (~2 phút) → ~60 s/câu → 
 | D4 | Prompt dùng context + answer-first, đủ mọi vế, số + đơn vị | local 7B: 7/25 vs D3 9/25 (đã báo tụt, nộp trước khi có số) | **nộp 3/11: 53.81 (−10.95) — bác bỏ** |
 | D5 | ~~PyMuPDF thay Docling~~ | lab C200: Docling c9 in_ctx@10k .85 > PyMuPDF .75 → mất evidence | **loại** (chỉ dùng nếu thiếu thời gian) |
 | — | ~~Chunk 1200/200~~ | lab C200 Docling c18 = c9 (.80/.85), MRR thấp hơn | **loại** |
-| D5 | Rerank top-100 bằng gte-reranker-modernbert-base fp16 | lab c29: C200 MRR .407 → .535, in_ctx@2k .60 → .75; gold .477 → .584 | **zip sẵn 3/11** `submissions/d5_gte_rerank.zip` |
+| D5 | Rerank top-100 bằng gte-reranker-modernbert-base fp16 | lab c29: C200 MRR .407 → .535, in_ctx@2k .60 → .75; gold .477 → .584 | **nộp 3/11: 60.48 (−4.28)** — không cải thiện |
+| D6 | D5 chỉ cho câu AI (regex DONES giữ thứ tự D3) → tách tác dụng rerank theo domain | smoke: DONES = D3, AI = D5 (25/25) | **zip sẵn 4/11** `submissions/d6_gated_rerank.zip` |
 | D6? | Olmo làm reranker (dùng lại 32B, Yes/No logit) thay/bổ sung gte | lab c25/c26 bằng 7B 4-bit (chờ GPU local rảnh) | chờ |
 | D6 | Truy vấn 2 bước: Olmo viết lại câu hỏi thành từ khoá/tên paper → retrieval → trả lời | recall tăng trong lab (truy vấn viết lại) | chờ |
 | D7 | Tự kiểm: lượt 2 đối chiếu câu trả lời với fragment, sửa số/đơn vị | 32B sample25 | chờ |

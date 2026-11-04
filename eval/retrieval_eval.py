@@ -181,7 +181,8 @@ def load_doc_map():
 
 
 def load_split(name):
-    p = ROOT / "data" / "splits" / f"{name}.jsonl"
+    p = Path(name) if name.endswith(".jsonl") else ROOT / "data" / "splits" / f"{name}.jsonl"
+    p = p if p.is_absolute() else ROOT / p
     with open(p, encoding="utf-8") as f:
         return [json.loads(l) for l in f if l.strip()]
 

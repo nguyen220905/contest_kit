@@ -13,11 +13,14 @@
 ## Đang làm
 - **D6 `submissions/d6_gated_rerank.zip` (674 MB) sẵn sàng nộp**: rerank gte chỉ cho câu AI, câu DONES = D3 (smoke 25/25).
   LB(D6) − 64.76 = tác dụng rerank ở domain AI → biết D5 mất điểm ở domain nào. Chờ người dùng upload.
-- Tập dev lớn hơn (≥ 100 câu tổng hợp từ corpus, có quote) + 32B thật: LB không phân biệt được chênh < ~8 điểm (sd ~5).
+- Tập dev tổng hợp xong: `data/work/syn/syn_v1_ds.jsonl` (221 câu, DONES 127/AI 94) — CHƯA đóng băng vào data/splits/ (đường dẫn bảo vệ → người dùng tự copy thành `data/splits/syn221.jsonl`).
+  Dễ cho retrieval (in_ctx@10k .99) → dùng cho end-to-end 32B, không dùng chọn retrieval.
+- Thuê GPU: đề xuất RunPod H100 80GB (~$2–2.7/h, ~4 h); người dùng tự tạo pod + nạp tiền, gửi SSH. Key OpenRouter trong tools/.env HẾT HẠN (401).
 - Chờ GPU local rảnh (Docker/WSL dự án khác chiếm 13.4 GB): lab c25/c26 Olmo-7B làm reranker.
 - Git Windows mất (ổ E:) → commit bằng WSL git (memory git-via-wsl).
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
+- 2026-11-04 — exp-007 tập dev tổng hợp 221 câu; lab: c29 (rerank) > c9 ở CẢ 2 domain (DONES MRR .70→.87) → không thấy rerank hại DONES, nhưng tập dễ hơn câu thật
 - 2026-11-04 — D5 LB **60.48 (−4.28)** dù lab tốt hơn; lab theo domain: rerank giúp AI, DONES lẫn lộn → D6 tách domain
 - 2026-11-03 — exp-006 lab rerank: chỉ gte-reranker-modernbert thắng (mxbai/bge/msmarco không); top100 tốt nhất → D5 build + smoke
 - 2026-11-03 — D4 (prompt mới) LB **53.81 (−10.95)** → bác bỏ; local 7B gold đã báo trước (7/25 vs D3 9/25). Sửa judge: verdict bằng regex khi JSON hỏng vì LaTeX
@@ -30,8 +33,9 @@
 ## Bước tiếp theo (1–3 việc, có lệnh chạy)
 1. Người dùng nộp D6 → ghi LB, tính Δ theo domain (7a+3b: D3 136, D5 127). Nếu AI tăng → giữ rerank cho AI, tìm cách khác cho DONES.
    (Khi GPU rảnh: smoke đủ LLM `.venv\Scripts\python eval/run_pipeline.py --submission data/work/unzip/d6_gated_rerank --split sample25 --run results/s1_d6_smoke --offline --limit 2`)
-2. Lab c25/c26: Olmo-7B làm reranker (`dsqa/llm_rerank.py`) — so với c29; mô-đun "CI" cho paper
-3. Thuê GPU (RTX PRO 6000 96 GB) để chạy 32B thật: đổi generation chỉ nộp khi 32B trên sample25 không thua
+2. Thuê H100 (RunPod) → 32B bf16 chạy D3/D5/D6 trên syn221 + sample25 (`eval/run_pipeline.py --quant none --split <jsonl>`), judge ở local.
+   Đổi generation chỉ nộp khi 32B trên tập này không thua.
+3. syn_v2 "khó" (diễn đạt lại, bảng, ghép 2 đoạn) để lab retrieval có độ phân giải; lab c25/c26 Olmo-7B reranker khi GPU rảnh
 
 ## Vướng mắc / câu hỏi mở
 - GPU thuê: chưa thuê — mọi thay đổi khâu sinh câu trả lời (prompt, tự kiểm) đang mù với 32B (D2, D4 đều tụt 8–11 điểm).

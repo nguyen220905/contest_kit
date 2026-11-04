@@ -26,6 +26,7 @@ Chưa có pipeline của đội. `starter_kit/` = code mẫu của BTC (chỉ đ
 | `dsqa/llm_rerank.py` | LLMReranker: Olmo chấm Yes/No từng chunk (dùng lại model sinh), truyền vào `Retriever(rerank_fn=...)` | transformers | lab c25/c26 (7B) |
 | `submissions/d6_gated_rerank/` | D6 = D5 nhưng câu khớp `_DONES_RE` giữ thứ tự hybrid D3 (tách tác dụng rerank theo domain) | dsqa | build.py → d6_gated_rerank.zip |
 | `submissions/d5_gte_rerank/` | D5 = D3 + CrossEncoder gte-reranker-modernbert-base fp16 rerank top-100 (lab c29), fallback về thứ tự hybrid | dsqa | build.py → d5_gte_rerank.zip (giải nén 737 MB) |
+| `scripts/make_syn_dev.py` | Tập dev tổng hợp từ text Docling đã cache của C200: chọn passage → generator viết câu + đáp án + quote → lọc (quote có thật, verifier + judge) → `data/work/syn/<name>.jsonl` (schema sample25) | eval/judge.py | `--gen/--ver` = provider; `--limit N` thử; cache LLM nên chạy lại miễn phí |
 | `eval/compare_runs.py` | So 2 run theo id: số câu khác chữ, lỗi, token, latency (+ verdict lật khi có) | — | đo nhiễu / lệch shim |
 
 ## Luồng dữ liệu

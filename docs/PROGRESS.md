@@ -8,11 +8,12 @@
 ## Điểm tốt nhất
 | Metric local | LB public | File nộp | Thí nghiệm | Ghi chú |
 |---|---|---|---|---|
-| lab C200 Docling in_ctx@10k .85, MRR .407 | **64.76** / 2088 s | d3_hybrid_title.zip (2/11) | D3 | tài khoản `snute`; D1 57.14 · D2 49.05 · D4 53.81 · D5 60.48 (đều thua) |
+| lab C200 Docling in_ctx@10k .85, MRR .407 | **64.76** / 2088 s | d3_hybrid_title.zip (2/11) | D3 | tài khoản `snute`; D1 57.14 · D2 49.05 · D4 53.81 · D5 60.48 · D6 60.48 (đều thua) |
 
 ## Đang làm
-- **D6 `submissions/d6_gated_rerank.zip` (674 MB) sẵn sàng nộp**: rerank gte chỉ cho câu AI, câu DONES = D3 (smoke 25/25).
-  LB(D6) − 64.76 = tác dụng rerank ở domain AI → biết D5 mất điểm ở domain nào. Chờ người dùng upload.
+- **D7 `submissions/d7_probe_dones.zip` (399 MB) sẵn sàng nộp** — bài thăm dò: D3 chỉ trả lời câu DONES → LB = 50·a/15 cho biết
+  D3 đúng bao nhiêu câu DONES (a ∈ {7, 10, 13}) → chọn domain để tập trung. Chờ người dùng upload.
+- **Domain đã rõ (D6)**: DONES = 15 câu public (3.33 đ/câu), AI = 35 câu (1.43 đ/câu).
 - Tập dev tổng hợp xong: `data/work/syn/syn_v1_ds.jsonl` (221 câu, DONES 127/AI 94) — CHƯA đóng băng vào data/splits/ (đường dẫn bảo vệ → người dùng tự copy thành `data/splits/syn221.jsonl`).
   Dễ cho retrieval (in_ctx@10k .99) → dùng cho end-to-end 32B, không dùng chọn retrieval.
 - Thuê GPU: đề xuất RunPod H100 80GB (~$2–2.7/h, ~4 h); người dùng tự tạo pod + nạp tiền, gửi SSH. Key OpenRouter trong tools/.env HẾT HẠN (401).
@@ -20,6 +21,7 @@
 - Git Windows mất (ổ E:) → commit bằng WSL git (memory git-via-wsl).
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
+- 2026-11-06 — D6 LB 60.48 = D5 → rerank hoà ở DONES, mất ~3 câu AI; AI = domain 35 câu, DONES = 15 câu. Bỏ rerank
 - 2026-11-04 — exp-007 tập dev tổng hợp 221 câu; lab: c29 (rerank) > c9 ở CẢ 2 domain (DONES MRR .70→.87) → không thấy rerank hại DONES, nhưng tập dễ hơn câu thật
 - 2026-11-04 — D5 LB **60.48 (−4.28)** dù lab tốt hơn; lab theo domain: rerank giúp AI, DONES lẫn lộn → D6 tách domain
 - 2026-11-03 — exp-006 lab rerank: chỉ gte-reranker-modernbert thắng (mxbai/bge/msmarco không); top100 tốt nhất → D5 build + smoke
@@ -31,15 +33,13 @@
 - 2026-10-22 — Stage 1–3: harness (`eval/run_pipeline.py`, `evaluate.py`, judge DeepSeek), corpus gold 18 PDF + nhiễu 182 PDF, sample25 split
 
 ## Bước tiếp theo (1–3 việc, có lệnh chạy)
-1. Người dùng nộp D6 → ghi LB, tính Δ theo domain (7a+3b: D3 136, D5 127). Nếu AI tăng → giữ rerank cho AI, tìm cách khác cho DONES.
-   (Khi GPU rảnh: smoke đủ LLM `.venv\Scripts\python eval/run_pipeline.py --submission data/work/unzip/d6_gated_rerank --split sample25 --run results/s1_d6_smoke --offline --limit 2`)
+1. Người dùng nộp D7 → a = LB·15/50 → b = (136 − 7a)/3 → ưu tiên domain có nhiều chỗ tăng (DONES đáng 3.33 đ/câu).
 2. Thuê H100 (RunPod) → 32B bf16 chạy D3/D5/D6 trên syn221 + sample25 (`eval/run_pipeline.py --quant none --split <jsonl>`), judge ở local.
    Đổi generation chỉ nộp khi 32B trên tập này không thua.
 3. syn_v2 "khó" (diễn đạt lại, bảng, ghép 2 đoạn) để lab retrieval có độ phân giải; lab c25/c26 Olmo-7B reranker khi GPU rảnh
 
 ## Vướng mắc / câu hỏi mở
 - GPU thuê: chưa thuê — mọi thay đổi khâu sinh câu trả lời (prompt, tự kiểm) đang mù với 32B (D2, D4 đều tụt 8–11 điểm).
-- Domain nào có 15 câu trong public chưa rõ.
 
 ## Bẫy đã biết (đừng lặp lại)
 - **Không đổi prompt/generation khi chưa có số**: D4 tụt 10.95. Local gold 7B đoán đúng hướng đổi generation → chờ local xong rồi mới nộp.

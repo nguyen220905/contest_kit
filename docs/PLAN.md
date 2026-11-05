@@ -6,6 +6,7 @@ Chi tiết + bằng chứng: `docs/council/round_01/SYNTHESIS.md` · nguồn cho
 ## Dữ kiện đã kiểm chứng (council-r01, phiên chính tự kiểm lại 2026-10-15)
 - Public LB = 50 câu, chia **15/35** giữa 2 domain: cả 36/36 điểm LB khớp `50·(a/15 + b/35)`, không split nào khác (10–25) khớp.
   1 câu = 3.33 điểm (domain 15 câu) hoặc 1.43 điểm (domain 35 câu). Chênh LB < ~4 điểm = nhiễu. Private = đủ 100 câu.
+  **D6 (6/11) xác định: DONES = 15 câu (3.33 đ/câu), AI Papers = 35 câu (1.43 đ/câu)** — D6 − D3 = −9 đơn vị chỉ đến từ câu AI, không chia hết cho 7.
 - LB 2026-10-15 (34 đội): top 69.05 (1288 s) · 68.57 (668 s) · 68.10 (605 s); **ngưỡng top 20 = 59.05**.
   Baseline BTC đã có trên LB: zero-shot 29.05 / 733 s, RAG 02_rag 57.14 / 2080 s → không tốn lượt nộp lại. LB có cột thời gian (= profiling miễn phí).
 - Phase 2 (trang evaluation): điểm cuối = **30%** accuracy Phase 1 + **30%** chuyên gia chấm chất lượng câu trả lời + **40%** technical innovation (CI); top 20 vào Phase 2.

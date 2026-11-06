@@ -11,9 +11,10 @@
 | lab C200 Docling in_ctx@10k .85, MRR .407 | **64.76** / 2088 s | d3_hybrid_title.zip (2/11) | D3 | tài khoản `snute`; D1 57.14 · D2 49.05 · D4 53.81 · D5 60.48 · D6 60.48 (đều thua) |
 
 ## Đang làm
-- **D7 `submissions/d7_probe_dones.zip` (399 MB) sẵn sàng nộp** — bài thăm dò: D3 chỉ trả lời câu DONES → LB = 50·a/15 cho biết
-  D3 đúng bao nhiêu câu DONES (a ∈ {7, 10, 13}) → chọn domain để tập trung. Chờ người dùng upload.
-- **Domain đã rõ (D6)**: DONES = 15 câu public (3.33 đ/câu), AI = 35 câu (1.43 đ/câu).
+- **D8 `submissions/d8_dones_calc.zip` (399 MB) sẵn sàng nộp**: D3 + tự kiểm phép tính bằng Python CHỈ cho câu DONES
+  (câu AI = D3 → LB − 64.76 = 3.33 × số câu DONES thêm). Chờ người dùng upload.
+- **D3 theo domain (D6 + D7)**: DONES 7/15 (47%), AI 29/35 (83%) → DONES là nút thắt; mọi thí nghiệm tiếp theo: cổng `_DONES_RE`,
+  câu AI giữ nguyên D3 → đo sạch trên 15 câu DONES.
 - Tập dev tổng hợp xong: `data/work/syn/syn_v1_ds.jsonl` (221 câu, DONES 127/AI 94) — CHƯA đóng băng vào data/splits/ (đường dẫn bảo vệ → người dùng tự copy thành `data/splits/syn221.jsonl`).
   Dễ cho retrieval (in_ctx@10k .99) → dùng cho end-to-end 32B, không dùng chọn retrieval.
 - Thuê GPU: đề xuất RunPod H100 80GB (~$2–2.7/h, ~4 h); người dùng tự tạo pod + nạp tiền, gửi SSH. Key OpenRouter trong tools/.env HẾT HẠN (401).
@@ -21,6 +22,7 @@
 - Git Windows mất (ổ E:) → commit bằng WSL git (memory git-via-wsl).
 
 ## Đã xong (mới nhất ở trên, tối đa 10 dòng)
+- 2026-11-06 — D7 thăm dò LB 23.33 → D3 DONES 7/15, AI 29/35. Lỗi DONES chủ yếu ở tính toán/tiền đề sai, không phải retrieval → D8 calc-check
 - 2026-11-06 — D6 LB 60.48 = D5 → rerank hoà ở DONES, mất ~3 câu AI; AI = domain 35 câu, DONES = 15 câu. Bỏ rerank
 - 2026-11-04 — exp-007 tập dev tổng hợp 221 câu; lab: c29 (rerank) > c9 ở CẢ 2 domain (DONES MRR .70→.87) → không thấy rerank hại DONES, nhưng tập dễ hơn câu thật
 - 2026-11-04 — D5 LB **60.48 (−4.28)** dù lab tốt hơn; lab theo domain: rerank giúp AI, DONES lẫn lộn → D6 tách domain
@@ -33,7 +35,8 @@
 - 2026-10-22 — Stage 1–3: harness (`eval/run_pipeline.py`, `evaluate.py`, judge DeepSeek), corpus gold 18 PDF + nhiễu 182 PDF, sample25 split
 
 ## Bước tiếp theo (1–3 việc, có lệnh chạy)
-1. Người dùng nộp D7 → a = LB·15/50 → b = (136 − 7a)/3 → ưu tiên domain có nhiều chỗ tăng (DONES đáng 3.33 đ/câu).
+1. Người dùng nộp D8 → Δ câu DONES = (LB − 64.76)/3.33. Ứng viên DONES kế tiếp (mỗi bài 1 thay đổi, có cổng): kiểm tiền đề sai (q7),
+   context DONES 10k → 15–20k (lab DONES in_ctx@15k 7/7 vs @10k 6/7).
 2. Thuê H100 (RunPod) → 32B bf16 chạy D3/D5/D6 trên syn221 + sample25 (`eval/run_pipeline.py --quant none --split <jsonl>`), judge ở local.
    Đổi generation chỉ nộp khi 32B trên tập này không thua.
 3. syn_v2 "khó" (diễn đạt lại, bảng, ghép 2 đoạn) để lab retrieval có độ phân giải; lab c25/c26 Olmo-7B reranker khi GPU rảnh
